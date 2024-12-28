@@ -1,0 +1,6 @@
+@Bank_System_PaySky_HostAddress = http://localhost:5168
+
+GET {{Bank_System_PaySky_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

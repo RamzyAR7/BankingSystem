@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Bank-System</name>
+    </assembly>
+    <members>
+        <member name="T:Bank_System_PaySky.Controllers.AccountCreationController">
+            <summary>
+            Controller for managing account get, creation, updates, delete.
+            </summary>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.AccountCreationController.#ctor(Bank_System_PaySky.Services.IAccountCreationService,Microsoft.Extensions.Logging.ILogger{Bank_System_PaySky.Controllers.AccountCreationController})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Bank_System_PaySky.Controllers.AccountCreationController"/> class.
+            </summary>
+            <param name="accountCreationService">The account creation service.</param>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.AccountCreationController.GetAccountById(System.Guid)">
+            <summary>
+            Gets an account by its ID.
+            </summary>
+            <param name="id">The account ID.</param>
+            <returns>The account details.</returns>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.AccountCreationController.GetAllAccounts">
+            <summary>
+            Gets all accounts.
+            </summary>
+            <returns>A list of all accounts.</returns>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.AccountCreationController.CreateCheckingAccount(Bank_System_PaySky.Models.Accounts.CreateCheckingAccountRequest)">
+            <summary>
+            Creates a new checking account.
+            </summary>
+            <param name="account">The checking account request.</param>
+            <returns>The created account details.</returns>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.AccountCreationController.CreateSavingAccount(Bank_System_PaySky.Models.Accounts.CreateSavingAccountRequest)">
+            <summary>
+            Creates a new saving account.
+            </summary>
+            <param name="account">The saving account request.</param>
+            <returns>The created account details.</returns>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.AccountCreationController.UpdateAccount(Bank_System_PaySky.Models.Accounts.UpdateAccountRequest,System.Guid)">
+            <summary>
+            Updates an existing account.
+            </summary>
+            <param name="account">The update account request.</param>
+            <param name="id">The account ID.</param>
+            <returns>The updated account details.</returns>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.AccountCreationController.DeleteAccount(System.Guid)">
+            <summary>
+            Deletes an account by its ID.
+            </summary>
+            <param name="id">The account ID.</param>
+            <returns>A success message.</returns>
+        </member>
+        <member name="T:Bank_System_PaySky.Controllers.AccountTransactionsController">
+            <summary>
+            Controller for managing account transactions.
+            </summary>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.AccountTransactionsController.#ctor(Bank_System_PaySky.Services.IAccountTransactionService,Microsoft.Extensions.Logging.ILogger{Bank_System_PaySky.Controllers.AccountTransactionsController})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Bank_System_PaySky.Controllers.AccountTransactionsController"/> class.
+            </summary>
+            <param name="accountService">The account transaction service.</param>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.AccountTransactionsController.Deposit(Bank_System_PaySky.Models.Transactions.DepositRequest)">
+            <summary>
+            Deposits an amount into an account.
+            </summary>
+            <param name="request">The deposit request.</param>
+            <returns>A success message.</returns>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.AccountTransactionsController.Withdraw(Bank_System_PaySky.Models.Transactions.WithdrawRequest)">
+            <summary>
+            Withdraws an amount from an account.
+            </summary>
+            <param name="request">The withdrawal request.</param>
+            <returns>A success message.</returns>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.AccountTransactionsController.Transfer(Bank_System_PaySky.Models.Transactions.TransferRequest)">
+            <summary>
+            Transfers an amount from one account to another.
+            </summary>
+            <param name="request">The transfer request.</param>
+            <returns>A success message.</returns>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.AccountTransactionsController.GetBalance(System.Guid)">
+            <summary>
+            Gets the balance of an account.
+            </summary>
+            <param name="accountId">The account ID.</param>
+            <returns>The account balance.</returns>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.AccountTransactionsController.AddInterest(System.Guid,System.Int32)">
+            <summary>
+            Adds interest to an account for a specified number of years.
+            </summary>
+            <param name="accountId">The account ID.</param>
+            <param name="years">The number of years.</param>
+            <returns>A success message.</returns>
+        </member>
+        <member name="T:Bank_System_PaySky.Controllers.TransactionsController">
+            <summary>
+            Controller for get transactions.
+            </summary>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.TransactionsController.#ctor(Bank_System_PaySky.Services.ITransactionsService,Microsoft.Extensions.Logging.ILogger{Bank_System_PaySky.Controllers.TransactionsController})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Bank_System_PaySky.Controllers.TransactionsController"/> class.
+            </summary>
+            <param name="transactions">The transactions service.</param>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.TransactionsController.GetAllTransactions">
+            <summary>
+            Gets all transactions.
+            </summary>
+            <returns>A list of all transactions.</returns>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.TransactionsController.GetTransactionById(System.Guid)">
+            <summary>
+            Gets a transaction by its ID.
+            </summary>
+            <param name="id">The transaction ID.</param>
+            <returns>The transaction details.</returns>
+        </member>
+        <member name="T:Bank_System_PaySky.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:Bank_System_PaySky.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Bank_System_PaySky.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Bank_System_PaySky.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

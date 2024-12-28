@@ -9,7 +9,7 @@ namespace Bank_System_PaySky.Entities.AccountModels
         public Guid AccountId { get; set; }
 
         // Account number
-        public double AccountNumber { get; set; }
+        public double AccountNumbers { get; set; }
 
         // Current balance of the account
         public decimal Balance { get; set; }

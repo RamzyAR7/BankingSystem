@@ -56,7 +56,7 @@ namespace UnitTest
         {
             var savingAccountRequest = new CreateSavingAccountRequest
             {
-                AccountNumber = 1234567890,
+                AccountNumbers = 1234567890,
                 Balance = 2000,
                 Interest = 5
             };
@@ -64,7 +64,7 @@ namespace UnitTest
             var result = await _accountCreationService.CreateSavingAccountAsync(savingAccountRequest);
             var account = await _accountHelper.GetAccountByIdAsync(result.AccountId);
 
-            Assert.That(account.AccountNumber, Is.EqualTo(savingAccountRequest.AccountNumber));
+            Assert.That(account.AccountNumbers, Is.EqualTo(savingAccountRequest.AccountNumbers));
             Assert.That(account.Balance, Is.EqualTo(savingAccountRequest.Balance));
             Assert.That(((SavingAccount)account).InterestRate, Is.EqualTo(savingAccountRequest.Interest));
         }
@@ -77,7 +77,7 @@ namespace UnitTest
         {
             var savingAccountRequest = new CreateSavingAccountRequest
             {
-                AccountNumber = 1234567890,
+                AccountNumbers = 1234567890,
                 Balance = 2000,
                 Interest = 5
             };
@@ -96,7 +96,7 @@ namespace UnitTest
             var savingAccount = new SavingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumber = 1234567890,
+                AccountNumbers = 1234567890,
                 Balance = 2000,
                 InterestRate = 5
             };
@@ -120,7 +120,7 @@ namespace UnitTest
             var savingAccount = new SavingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumber = 1234567890,
+                AccountNumbers = 1234567890,
                 Balance = 2000,
                 InterestRate = 5
             };
@@ -141,7 +141,7 @@ namespace UnitTest
             var savingAccount = new SavingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumber = 1234567890,
+                AccountNumbers = 1234567890,
                 Balance = 2000,
                 InterestRate = 5
             };
@@ -165,7 +165,7 @@ namespace UnitTest
         {
             var checkingAccountRequest = new CreateCheckingAccountRequest
             {
-                AccountNumber = 1234567890,
+                AccountNumbers = 1234567890,
                 Balance = 2000,
                 Overdrafts = 200 // Optional, will default to 500 if not provided
             };
@@ -173,7 +173,7 @@ namespace UnitTest
             var result = await _accountCreationService.CreateCheckingAccountAsync(checkingAccountRequest);
             var account = await _accountHelper.GetAccountByIdAsync(result.AccountId);
 
-            Assert.That(account.AccountNumber, Is.EqualTo(checkingAccountRequest.AccountNumber));
+            Assert.That(account.AccountNumbers, Is.EqualTo(checkingAccountRequest.AccountNumbers));
             Assert.That(account.Balance, Is.EqualTo(checkingAccountRequest.Balance));
             Assert.That(((CheckingAccount)account).Overdrafts, Is.EqualTo(checkingAccountRequest.Overdrafts));
         }
@@ -186,7 +186,7 @@ namespace UnitTest
         {
             var checkingAccountRequest = new CreateCheckingAccountRequest
             {
-                AccountNumber = 1234567890,
+                AccountNumbers = 1234567890,
                 Balance = 1000,
                 Overdrafts = 500
             };
@@ -206,7 +206,7 @@ namespace UnitTest
             var checkingAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumber = 1234567890,
+                AccountNumbers = 1234567890,
                 Balance = 2000,
                 Overdrafts = 500
             };
@@ -230,7 +230,7 @@ namespace UnitTest
             var checkingAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumber = 1234567890,
+                AccountNumbers = 1234567890,
                 Balance = 2000,
                 Overdrafts = 500
             };
@@ -251,7 +251,7 @@ namespace UnitTest
             var checkingAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumber = 1234567890,
+                AccountNumbers = 1234567890,
                 Balance = 2000,
                 Overdrafts = 500
             };
@@ -275,7 +275,7 @@ namespace UnitTest
             var checkingAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumber = 1234567890,
+                AccountNumbers = 1234567890,
                 Balance = 2000,
                 Overdrafts = 500
             };
@@ -296,7 +296,7 @@ namespace UnitTest
             var sourceAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumber = 1234567890,
+                AccountNumbers = 1234567890,
                 Balance = 1000,
                 Overdrafts = 500
             };
@@ -304,7 +304,7 @@ namespace UnitTest
             var targetAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumber = 1234567891,
+                AccountNumbers = 1234567891,
                 Balance = 500,
                 Overdrafts = 500
             };
@@ -330,7 +330,7 @@ namespace UnitTest
             var sourceAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumber = 1234567890,
+                AccountNumbers = 1234567890,
                 Balance = 1000,
                 Overdrafts = 500
             };
@@ -338,7 +338,7 @@ namespace UnitTest
             var targetAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumber = 1234567891,
+                AccountNumbers = 1234567891,
                 Balance = 500,
                 Overdrafts = 500
             };
@@ -359,7 +359,7 @@ namespace UnitTest
             var checkingAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumber = 1234567890,
+                AccountNumbers = 1234567890,
                 Balance = 2000,
                 Overdrafts = 500
             };

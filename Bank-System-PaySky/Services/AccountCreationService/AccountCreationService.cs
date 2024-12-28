@@ -28,7 +28,7 @@ namespace Bank_System_PaySky.Services.AccountCreation
             var accountResponse = new AccountResponse
             {
                 AccountId = account.AccountId,
-                AccountNumber = account.AccountNumber,
+                AccountNumbers = account.AccountNumbers,
                 AccountType = account.GetType().Name,
                 Balance = account.Balance
             };
@@ -52,7 +52,7 @@ namespace Bank_System_PaySky.Services.AccountCreation
             return accounts.Select(a => new AccountResponse
             {
                 AccountId = a.AccountId,
-                AccountNumber = a.AccountNumber,
+                AccountNumbers = a.AccountNumbers,
                 AccountType = a.GetType().Name,
                 Balance = a.Balance,
                 Interest = a is SavingAccount savingAccount ? savingAccount.InterestRate : null,
@@ -63,16 +63,16 @@ namespace Bank_System_PaySky.Services.AccountCreation
         // Method to create a new checking account
         public async Task<AccountResponse> CreateCheckingAccountAsync(CreateCheckingAccountRequest account)
         {
-            bool isAccountExist = await _dbContext.Accounts.AnyAsync(a => a.AccountNumber == account.AccountNumber);
+            bool isAccountExist = await _dbContext.Accounts.AnyAsync(a => a.AccountNumbers == account.AccountNumbers);
 
             if (isAccountExist)
             {
-                throw new InvalidAccountNumberException($"Account with number {account.AccountNumber} already exists.");
+                throw new InvalidAccountNumberException($"Account with number {account.AccountNumbers} already exists.");
             }
 
             var newAccount = new CheckingAccount
             {
-                AccountNumber = account.AccountNumber,
+                AccountNumbers = account.AccountNumbers,
                 Balance = account.Balance,
                 Overdrafts = account.Overdrafts.Value
             };
@@ -82,7 +82,7 @@ namespace Bank_System_PaySky.Services.AccountCreation
             return new AccountResponse
             {
                 AccountId = newAccount.AccountId,
-                AccountNumber = newAccount.AccountNumber,
+                AccountNumbers = newAccount.AccountNumbers,
                 AccountType = newAccount.GetType().Name,
                 Balance = newAccount.Balance,
                 Overdrafts = newAccount.Overdrafts
@@ -92,16 +92,16 @@ namespace Bank_System_PaySky.Services.AccountCreation
         // Method to create a new saving account
         public async Task<AccountResponse> CreateSavingAccountAsync(CreateSavingAccountRequest account)
         {
-            bool isAccountExist = await _dbContext.Accounts.AnyAsync(a => a.AccountNumber == account.AccountNumber);
+            bool isAccountExist = await _dbContext.Accounts.AnyAsync(a => a.AccountNumbers == account.AccountNumbers);
 
             if (isAccountExist)
             {
-                throw new InvalidAccountNumberException($"Account with number {account.AccountNumber} already exists.");
+                throw new InvalidAccountNumberException($"Account with number {account.AccountNumbers} already exists.");
             }
 
             var newAccount = new SavingAccount
             {
-                AccountNumber = account.AccountNumber,
+                AccountNumbers = account.AccountNumbers,
                 Balance = account.Balance,
                 InterestRate = account.Interest.Value
             };
@@ -111,7 +111,7 @@ namespace Bank_System_PaySky.Services.AccountCreation
             return new AccountResponse
             {
                 AccountId = newAccount.AccountId,
-                AccountNumber = newAccount.AccountNumber,
+                AccountNumbers = newAccount.AccountNumbers,
                 AccountType = newAccount.GetType().Name,
                 Balance = newAccount.Balance,
                 Interest = newAccount.InterestRate
@@ -127,7 +127,7 @@ namespace Bank_System_PaySky.Services.AccountCreation
             return new AccountResponse
             {
                 AccountId = account.AccountId,
-                AccountNumber = account.AccountNumber,
+                AccountNumbers = account.AccountNumbers,
                 AccountType = account.GetType().Name,
                 Balance = account.Balance,
                 Interest = account is SavingAccount savingAccount ? savingAccount.InterestRate : null,

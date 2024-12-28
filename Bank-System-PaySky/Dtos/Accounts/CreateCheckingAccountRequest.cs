@@ -6,7 +6,7 @@ namespace Bank_System_PaySky.Models.Accounts
     {
         [Required]
         [Range(1000000000, 9999999999, ErrorMessage = "Account number must be a 10-digit number.")]
-        public double AccountNumber { get; set; }
+        public double AccountNumbers { get; set; }
 
         [Required]
         [Range(0, double.MaxValue, ErrorMessage = "Balance must be a positive value.")]

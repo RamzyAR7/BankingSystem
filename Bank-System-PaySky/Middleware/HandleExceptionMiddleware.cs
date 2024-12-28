@@ -2,7 +2,6 @@
 using System.Text.Json;
 using System.Transactions;
 using Bank_System_PaySky.Exceptions;
-using Bank_System_PaySky.Exeptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bank_System_PaySky.Middleware
@@ -16,6 +15,7 @@ namespace Bank_System_PaySky.Middleware
             _logger = logger;
         }
 
+        // Middleware to handle exceptions
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             var requestId = Guid.NewGuid().ToString();
@@ -41,6 +41,7 @@ namespace Bank_System_PaySky.Middleware
             }
         }
 
+        // Method to handle exceptions and return appropriate response
         private async Task HandleExceptionAsync(HttpContext context, Exception exception, string requestId)
         {
             context.Response.ContentType = "application/json";
@@ -49,9 +50,8 @@ namespace Bank_System_PaySky.Middleware
                 AccountNotFoundException => (int)HttpStatusCode.NotFound,
                 InvalidAccountOperationException => (int)HttpStatusCode.BadRequest,
                 InvalidAccountNumberException => (int)HttpStatusCode.BadRequest,
-                TransactionException => (int)HttpStatusCode.BadRequest,
+                TransactionNotFoundException => (int)HttpStatusCode.NotFound,
                 DbUpdateExceptionHandle => (int)HttpStatusCode.BadRequest,
-                Exception => (int)HttpStatusCode.InternalServerError,
                 _ => (int)HttpStatusCode.InternalServerError
             };
 
@@ -69,6 +69,7 @@ namespace Bank_System_PaySky.Middleware
         }
     }
 
+    // Class to represent error details in the response
     public class ErrorDetails
     {
         public string Code { get; set; } = null!;

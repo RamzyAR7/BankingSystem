@@ -1,15 +1,18 @@
 using Bank_System_PaySky.Data;
 using Bank_System_PaySky.Middleware;
-using Bank_System_PaySky.Services;
+using Bank_System_PaySky.Services.AccountCreation;
+using Bank_System_PaySky.Services.AccountHelper;
+using Bank_System_PaySky.Services.AccountTransactionService;
+using Bank_System_PaySky.Services.Transactions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure logging to output to both the console and debug
 builder.Services.AddLogging(config =>
 {
-    // Configure logging to output to both the console and debug
     config.AddConsole();
     config.AddDebug();
 });
@@ -18,8 +21,10 @@ builder.Services.AddLogging(config =>
 builder.Services.AddDbContext<BankingDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Register middleware for exception handling
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
+// Register services for dependency injection
 builder.Services.AddScoped<IAccountHelperService, AccountHelperService>();
 builder.Services.AddScoped<ITransactionsService, TransactionsService>();
 builder.Services.AddScoped<IAccountTransactionService, AccountTransactionService>();
@@ -29,6 +34,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
+// Configure Swagger for API documentation
 var info = new OpenApiInfo()
 {
     Title = "Banking System API", // API title
@@ -43,7 +49,7 @@ var info = new OpenApiInfo()
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1",info);
+    c.SwaggerDoc("v1", info);
 
     // Set the comments path for the Swagger JSON and UI.
     var xmlFile = "Bank-System-PaySky.xml";
@@ -53,13 +59,12 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseSwagger
-    (x =>{
+    app.UseSwagger(x =>
+    {
         x.RouteTemplate = "swagger/{documentName}/swagger.json";
     });
     app.UseSwaggerUI(c =>

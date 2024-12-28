@@ -1,11 +1,10 @@
-﻿using Bank_System_PaySky.Entites.AccountModdels;
+﻿using Bank_System_PaySky.Entities.AccountModels;
 using Bank_System_PaySky.Exceptions;
-using Bank_System_PaySky.Services;
 using Bank_System_PaySky.Models;
 using Microsoft.AspNetCore.Mvc;
 using Bank_System_PaySky.Models.Accounts;
-using Bank_System_PaySky.Exeptions;
 using System.Security.Principal;
+using Bank_System_PaySky.Services.AccountCreation;
 
 namespace Bank_System_PaySky.Controllers
 {
@@ -23,11 +22,11 @@ namespace Bank_System_PaySky.Controllers
         /// Initializes a new instance of the <see cref="AccountCreationController"/> class.
         /// </summary>
         /// <param name="accountCreationService">The account creation service.</param>
+        /// <param name="logger">The logger instance.</param>
         public AccountCreationController(IAccountCreationService accountCreationService, ILogger<AccountCreationController> logger)
         {
             _accountCreationService = accountCreationService;
             _logger = logger;
-
         }
 
         /// <summary>
@@ -75,7 +74,7 @@ namespace Bank_System_PaySky.Controllers
             var reqId = HttpContext.Items["RequestId"]?.ToString();
             _logger.LogInformation($"(CreateCheckingAccount) Request ==> {reqId}; Entered ==> {nameof(CreateCheckingAccount)}");
             var createdAccount = await _accountCreationService.CreateCheckingAccountAsync(account);
-            _logger.LogInformation($"(CreateCheckingAccount Sucessful) Request ==> {reqId}; Entered ==> {nameof(CreateCheckingAccount)}");
+            _logger.LogInformation($"(CreateCheckingAccount Successful) Request ==> {reqId}; Entered ==> {nameof(CreateCheckingAccount)}");
             return CreatedAtAction(nameof(GetAccountById), new { id = createdAccount.AccountId }, createdAccount);
         }
 
@@ -106,13 +105,12 @@ namespace Bank_System_PaySky.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-
         public async Task<IActionResult> UpdateAccount([FromBody] UpdateAccountRequest account, Guid id)
         {
             var reqId = HttpContext.Items["RequestId"]?.ToString();
             _logger.LogInformation($"(UpdateAccount) Request ==> {reqId}; Entered ==> {nameof(UpdateAccount)}");
             var updatedAccount = await _accountCreationService.UpdateAccountAsync(id, account);
-            _logger.LogInformation($"(UpdateAccount) Request ==> {reqId}; Entered ==> {nameof(UpdateAccount)}");
+            _logger.LogInformation($"(UpdateAccount Successful) Request ==> {reqId}; Entered ==> {nameof(UpdateAccount)}");
             return Ok(updatedAccount);
         }
 

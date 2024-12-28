@@ -1,12 +1,12 @@
 ﻿using Bank_System_PaySky.Data;
-using Bank_System_PaySky.Entites.AccountModdels;
-using Bank_System_PaySky.Entities.AccountModdels;
-using Bank_System_PaySky.Entities.AccountTransactionsModels;
+using Bank_System_PaySky.Entities.AccountModels;
 using Bank_System_PaySky.Entities.TransactionsModels;
+using Bank_System_PaySky.Entities.AccountTransactionsModels;
 using Bank_System_PaySky.Exceptions;
+using Bank_System_PaySky.Services.AccountHelper;
 
 
-namespace Bank_System_PaySky.Services
+namespace Bank_System_PaySky.Services.AccountTransactionService
 {
     public class AccountTransactionService : IAccountTransactionService
     {
@@ -32,13 +32,13 @@ namespace Bank_System_PaySky.Services
             var transaction = new Transaction()
             {
                 Amount = amount,
-                Type = TransactionType.Deposit.ToString(),
+                TransactionType = TransactionType.Deposit.ToString(),
                 Timestamp = DateTime.UtcNow
             };
             await _dbContext.Transactions.AddAsync(transaction);
             await _dbContext.SaveChangesAsync();
 
-            var accountTransaction = new AccountTransactions()
+            var accountTransaction = new AccountTransactions
             {
                 AccountId = accountId,
                 TransactionId = transaction.TransactionId,
@@ -52,18 +52,18 @@ namespace Bank_System_PaySky.Services
         public async Task WithdrawAsync(Guid accountId, decimal amount)
         {
             Account account = await _accountHelper.GetAccountByIdAsync(accountId);
-            account.WithDraw(amount);
+            account.Withdraw(amount);
 
             var transaction = new Transaction()
             {
                 Amount = amount,
-                Type = TransactionType.Withdraw.ToString(),
+                TransactionType = TransactionType.Withdraw.ToString(),
                 Timestamp = DateTime.UtcNow
             };
             await _dbContext.Transactions.AddAsync(transaction);
             await _dbContext.SaveChangesAsync();
 
-            var accountTransaction = new AccountTransactions()
+            var accountTransaction = new AccountTransactions
             {
                 AccountId = accountId,
                 TransactionId = transaction.TransactionId,
@@ -83,20 +83,20 @@ namespace Bank_System_PaySky.Services
             var transaction = new Transaction()
             {
                 Amount = amount,
-                Type = TransactionType.Transfer.ToString(),
+                TransactionType = TransactionType.Transfer.ToString(),
                 Timestamp = DateTime.UtcNow
             };
             await _dbContext.Transactions.AddAsync(transaction);
             await _dbContext.SaveChangesAsync();
 
-            var sourceAccountTransaction = new AccountTransactions()
+            var sourceAccountTransaction = new AccountTransactions
             {
                 AccountId = sourceAccount.AccountId,
                 TransactionId = transaction.TransactionId,
                 AccountStatus = "Source"
             };
 
-            var targetAccountTransaction = new AccountTransactions()
+            var targetAccountTransaction = new AccountTransactions
             {
                 AccountId = targetAccount.AccountId,
                 TransactionId = transaction.TransactionId,

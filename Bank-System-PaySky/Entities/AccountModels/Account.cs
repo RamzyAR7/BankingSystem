@@ -1,17 +1,23 @@
 ﻿using Bank_System_PaySky.Entities.AccountTransactionsModels;
 using Bank_System_PaySky.Exceptions;
-using Bank_System_PaySky.Exeptions;
 
-namespace Bank_System_PaySky.Entites.AccountModdels
+namespace Bank_System_PaySky.Entities.AccountModels
 {
     public abstract class Account
     {
+        // Unique identifier for the account
         public Guid AccountId { get; set; }
-        public double AccountNumbers { get; set; }
+
+        // Account number
+        public double AccountNumber { get; set; }
+
+        // Current balance of the account
         public decimal Balance { get; set; }
 
+        // Collection of account transactions
         public virtual ICollection<AccountTransactions> AccountTransactions { get; set; }
 
+        // Method to deposit an amount into the account
         public virtual void Deposit(decimal amount)
         {
             if (amount <= 0)
@@ -20,19 +26,26 @@ namespace Bank_System_PaySky.Entites.AccountModdels
             }
             Balance += amount;
         }
+
+        // Method to get the current balance of the account
         public virtual decimal GetBalance()
         {
             return Balance;
         }
+
+        // Method to check if a transfer is valid based on the amount
         public bool IsTransferValid(decimal amount)
         {
             return Balance >= amount;
         }
-        public abstract void WithDraw(decimal amount);
 
-        public void Transfer(Account account, decimal amount)
+        // Abstract method to withdraw an amount from the account
+        public abstract void Withdraw(decimal amount);
+
+        // Method to transfer an amount to another account
+        public void Transfer(Account targetAccount, decimal amount)
         {
-            if (account == null)
+            if (targetAccount == null)
             {
                 throw new AccountNotFoundException("Target account is null.");
             }
@@ -40,8 +53,8 @@ namespace Bank_System_PaySky.Entites.AccountModdels
             {
                 throw new InvalidAccountOperationException("Insufficient funds for the transfer.");
             }
-            WithDraw(amount);
-            account.Deposit(amount);
+            Withdraw(amount);
+            targetAccount.Deposit(amount);
         }
     }
 }

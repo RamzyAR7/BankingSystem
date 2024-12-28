@@ -1,24 +1,28 @@
-﻿using Bank_System_PaySky.Entites.AccountModdels;
+﻿using Bank_System_PaySky.Entities.AccountModels;
 using Bank_System_PaySky.Exceptions;
 
-namespace Bank_System_PaySky.Entities.AccountModdels
+namespace Bank_System_PaySky.Entities.AccountModels
 {
     public class SavingAccount : Account
     {
-        public decimal Interest { get; set; }
+        // Interest rate for the savings account
+        public decimal InterestRate { get; set; }
 
+        // Method to add interest to the account balance over a number of years
         public void AddInterest(int years)
         {
             if (years <= 0)
             {
-                throw new InvalidAccountOperationException("Years Must be greater than Zero");
+                throw new InvalidAccountOperationException("Years must be greater than zero.");
             }
             for (int i = 0; i < years; i++)
             {
-                Balance += (Interest / 100) * Balance;
+                Balance += (InterestRate / 100) * Balance;
             }
         }
-        public override void WithDraw(decimal amount)
+
+        // Method to withdraw an amount from the account
+        public override void Withdraw(decimal amount)
         {
             if (amount <= 0)
             {
@@ -27,7 +31,6 @@ namespace Bank_System_PaySky.Entities.AccountModdels
             if (!IsTransferValid(amount))
             {
                 throw new InvalidAccountOperationException("Insufficient funds for the withdrawal.");
-
             }
             Balance -= amount;
         }

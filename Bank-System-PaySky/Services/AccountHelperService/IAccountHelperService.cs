@@ -1,7 +1,7 @@
-﻿using Bank_System_PaySky.Entites.AccountModdels;
+﻿using Bank_System_PaySky.Entities.AccountModels;
 using Bank_System_PaySky.Entities.TransactionsModels;
 
-namespace Bank_System_PaySky.Services
+namespace Bank_System_PaySky.Services.AccountHelper
 {
     public interface IAccountHelperService
     {

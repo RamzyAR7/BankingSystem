@@ -1,10 +1,7 @@
-﻿using Azure.Core;
-using Bank_System_PaySky.Exceptions;
-using Bank_System_PaySky.Exeptions;
+﻿using Bank_System_PaySky.Exceptions;
 using Bank_System_PaySky.Models.Transactions;
-using Bank_System_PaySky.Services;
+using Bank_System_PaySky.Services.AccountTransactionService;
 using Microsoft.AspNetCore.Mvc;
-
 
 namespace Bank_System_PaySky.Controllers
 {
@@ -22,6 +19,7 @@ namespace Bank_System_PaySky.Controllers
         /// Initializes a new instance of the <see cref="AccountTransactionsController"/> class.
         /// </summary>
         /// <param name="accountService">The account transaction service.</param>
+        /// <param name="logger">The logger instance.</param>
         public AccountTransactionsController(IAccountTransactionService accountService, ILogger<AccountTransactionsController> logger)
         {
             _accountService = accountService;
@@ -68,7 +66,6 @@ namespace Bank_System_PaySky.Controllers
             return Ok(new { Message = "Withdrawal successful." });
         }
 
-
         /// <summary>
         /// Transfers an amount from one account to another.
         /// </summary>
@@ -103,7 +100,6 @@ namespace Bank_System_PaySky.Controllers
             _logger.LogInformation($"(GetBalance Successful) Request ==> {reqId}; Entered ==> {nameof(GetBalance)}");
             return Ok(new { AccountId = accountId, Balance = balance });
         }
-
 
         /// <summary>
         /// Adds interest to an account for a specified number of years.

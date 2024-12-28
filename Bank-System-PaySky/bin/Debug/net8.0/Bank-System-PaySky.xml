@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>Bank-System</name>
+        <name>Bank-System-PaySky</name>
     </assembly>
     <members>
         <member name="T:Bank_System_PaySky.Controllers.AccountCreationController">
@@ -9,11 +9,12 @@
             Controller for managing account get, creation, updates, delete.
             </summary>
         </member>
-        <member name="M:Bank_System_PaySky.Controllers.AccountCreationController.#ctor(Bank_System_PaySky.Services.IAccountCreationService,Microsoft.Extensions.Logging.ILogger{Bank_System_PaySky.Controllers.AccountCreationController})">
+        <member name="M:Bank_System_PaySky.Controllers.AccountCreationController.#ctor(Bank_System_PaySky.Services.AccountCreation.IAccountCreationService,Microsoft.Extensions.Logging.ILogger{Bank_System_PaySky.Controllers.AccountCreationController})">
             <summary>
             Initializes a new instance of the <see cref="T:Bank_System_PaySky.Controllers.AccountCreationController"/> class.
             </summary>
             <param name="accountCreationService">The account creation service.</param>
+            <param name="logger">The logger instance.</param>
         </member>
         <member name="M:Bank_System_PaySky.Controllers.AccountCreationController.GetAccountById(System.Guid)">
             <summary>
@@ -62,11 +63,12 @@
             Controller for managing account transactions.
             </summary>
         </member>
-        <member name="M:Bank_System_PaySky.Controllers.AccountTransactionsController.#ctor(Bank_System_PaySky.Services.IAccountTransactionService,Microsoft.Extensions.Logging.ILogger{Bank_System_PaySky.Controllers.AccountTransactionsController})">
+        <member name="M:Bank_System_PaySky.Controllers.AccountTransactionsController.#ctor(Bank_System_PaySky.Services.AccountTransactionService.IAccountTransactionService,Microsoft.Extensions.Logging.ILogger{Bank_System_PaySky.Controllers.AccountTransactionsController})">
             <summary>
             Initializes a new instance of the <see cref="T:Bank_System_PaySky.Controllers.AccountTransactionsController"/> class.
             </summary>
             <param name="accountService">The account transaction service.</param>
+            <param name="logger">The logger instance.</param>
         </member>
         <member name="M:Bank_System_PaySky.Controllers.AccountTransactionsController.Deposit(Bank_System_PaySky.Models.Transactions.DepositRequest)">
             <summary>
@@ -106,14 +108,15 @@
         </member>
         <member name="T:Bank_System_PaySky.Controllers.TransactionsController">
             <summary>
-            Controller for get transactions.
+            Controller for managing transactions.
             </summary>
         </member>
-        <member name="M:Bank_System_PaySky.Controllers.TransactionsController.#ctor(Bank_System_PaySky.Services.ITransactionsService,Microsoft.Extensions.Logging.ILogger{Bank_System_PaySky.Controllers.TransactionsController})">
+        <member name="M:Bank_System_PaySky.Controllers.TransactionsController.#ctor(Bank_System_PaySky.Services.Transactions.ITransactionsService,Microsoft.Extensions.Logging.ILogger{Bank_System_PaySky.Controllers.TransactionsController})">
             <summary>
             Initializes a new instance of the <see cref="T:Bank_System_PaySky.Controllers.TransactionsController"/> class.
             </summary>
             <param name="transactions">The transactions service.</param>
+            <param name="logger">The logger instance.</param>
         </member>
         <member name="M:Bank_System_PaySky.Controllers.TransactionsController.GetAllTransactions">
             <summary>
@@ -128,16 +131,16 @@
             <param name="id">The transaction ID.</param>
             <returns>The transaction details.</returns>
         </member>
-        <member name="T:Bank_System_PaySky.Migrations.InitialCreate">
+        <member name="T:Bank_System_PaySky.Migrations.v1">
             <inheritdoc />
         </member>
-        <member name="M:Bank_System_PaySky.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:Bank_System_PaySky.Migrations.v1.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:Bank_System_PaySky.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:Bank_System_PaySky.Migrations.v1.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:Bank_System_PaySky.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:Bank_System_PaySky.Migrations.v1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

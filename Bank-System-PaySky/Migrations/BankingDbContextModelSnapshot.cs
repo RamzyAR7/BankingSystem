@@ -22,13 +22,13 @@ namespace Bank_System_PaySky.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Bank_System_PaySky.Entites.AccountModdels.Account", b =>
+            modelBuilder.Entity("Bank_System_PaySky.Entities.AccountModels.Account", b =>
                 {
                     b.Property<Guid>("AccountId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("AccountNumbers")
+                    b.Property<double>("AccountNumber")
                         .HasColumnType("float");
 
                     b.Property<string>("AccountType")
@@ -79,7 +79,7 @@ namespace Bank_System_PaySky.Migrations
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Type")
+                    b.Property<string>("TransactionType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -88,9 +88,9 @@ namespace Bank_System_PaySky.Migrations
                     b.ToTable("Transactions");
                 });
 
-            modelBuilder.Entity("Bank_System_PaySky.Entites.AccountModdels.CheckingAccount", b =>
+            modelBuilder.Entity("Bank_System_PaySky.Entities.AccountModels.CheckingAccount", b =>
                 {
-                    b.HasBaseType("Bank_System_PaySky.Entites.AccountModdels.Account");
+                    b.HasBaseType("Bank_System_PaySky.Entities.AccountModels.Account");
 
                     b.Property<decimal>("Overdrafts")
                         .HasColumnType("decimal(18, 2)");
@@ -98,11 +98,11 @@ namespace Bank_System_PaySky.Migrations
                     b.HasDiscriminator().HasValue("Checking");
                 });
 
-            modelBuilder.Entity("Bank_System_PaySky.Entities.AccountModdels.SavingAccount", b =>
+            modelBuilder.Entity("Bank_System_PaySky.Entities.AccountModels.SavingAccount", b =>
                 {
-                    b.HasBaseType("Bank_System_PaySky.Entites.AccountModdels.Account");
+                    b.HasBaseType("Bank_System_PaySky.Entities.AccountModels.Account");
 
-                    b.Property<decimal>("Interest")
+                    b.Property<decimal>("InterestRate")
                         .HasColumnType("decimal(18, 2)");
 
                     b.HasDiscriminator().HasValue("Savings");
@@ -110,7 +110,7 @@ namespace Bank_System_PaySky.Migrations
 
             modelBuilder.Entity("Bank_System_PaySky.Entities.AccountTransactionsModels.AccountTransactions", b =>
                 {
-                    b.HasOne("Bank_System_PaySky.Entites.AccountModdels.Account", "Account")
+                    b.HasOne("Bank_System_PaySky.Entities.AccountModels.Account", "Account")
                         .WithMany("AccountTransactions")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -127,7 +127,7 @@ namespace Bank_System_PaySky.Migrations
                     b.Navigation("Transaction");
                 });
 
-            modelBuilder.Entity("Bank_System_PaySky.Entites.AccountModdels.Account", b =>
+            modelBuilder.Entity("Bank_System_PaySky.Entities.AccountModels.Account", b =>
                 {
                     b.Navigation("AccountTransactions");
                 });

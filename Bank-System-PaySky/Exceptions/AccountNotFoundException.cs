@@ -1,10 +1,10 @@
-﻿namespace Bank_System_PaySky.Exeptions
+﻿namespace Bank_System_PaySky.Exceptions
 {
-    public class AccountNotFoundException: Exception
+    // Custom exception for account not found scenarios
+    public class AccountNotFoundException : Exception
     {
-        public AccountNotFoundException() { }
         public AccountNotFoundException(string message) : base(message) { }
-        public AccountNotFoundException(string message, Exception innerException) : base(message, innerException) { }
 
+        public AccountNotFoundException(string message, Exception innerException) : base(message, innerException) { }
     }
 }

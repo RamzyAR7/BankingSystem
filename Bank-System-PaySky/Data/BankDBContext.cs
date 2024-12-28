@@ -1,25 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Bank_System_PaySky.Entities.TransactionsModels;
-using Bank_System_PaySky.Entites.AccountModdels;
-using Bank_System_PaySky.Entities.AccountModdels;
+using Bank_System_PaySky.Entities.AccountModels;
 using Bank_System_PaySky.Entities.AccountTransactionsModels;
 
 namespace Bank_System_PaySky.Data
 {
     public class BankingDbContext : DbContext
     {
+        // DbSet for accounts
         public DbSet<Account> Accounts { get; set; }
+
+        // DbSet for transactions
         public DbSet<Transaction> Transactions { get; set; }
 
+        // DbSet for account transactions
         public DbSet<AccountTransactions> AccountTransactions { get; set; }
 
         public BankingDbContext(DbContextOptions<BankingDbContext> options) : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Configure Account entity
             modelBuilder.Entity<Account>()
                 .HasDiscriminator<string>("AccountType")
                 .HasValue<SavingAccount>("Savings")
@@ -33,15 +36,17 @@ namespace Bank_System_PaySky.Data
                .Property(a => a.Balance)
                .HasColumnType("decimal(18, 2)");
 
+            // Configure CheckingAccount entity
             modelBuilder.Entity<CheckingAccount>()
                .Property(c => c.Overdrafts)
                .HasColumnType("decimal(18, 2)");
 
+            // Configure SavingAccount entity
             modelBuilder.Entity<SavingAccount>()
-                .Property(c => c.Interest)
+                .Property(c => c.InterestRate)
                 .HasColumnType("decimal(18, 2)");
 
-
+            // Configure Transaction entity
             modelBuilder.Entity<Transaction>()
                 .Property(t => t.TransactionId)
                 .ValueGeneratedOnAdd();
@@ -50,6 +55,7 @@ namespace Bank_System_PaySky.Data
                 .Property(t => t.Amount)
                 .HasColumnType("decimal(18, 2)");
 
+            // Configure AccountTransaction entity
             modelBuilder.Entity<AccountTransactions>()
                 .HasKey(at => new { at.AccountId, at.TransactionId });
 
@@ -59,7 +65,7 @@ namespace Bank_System_PaySky.Data
                 .HasForeignKey(at => at.AccountId);
 
             modelBuilder.Entity<AccountTransactions>()
-                .HasOne(at => at.Transaction)  
+                .HasOne(at => at.Transaction)
                 .WithMany(t => t.AccountTransactions)
                 .HasForeignKey(at => at.TransactionId);
         }

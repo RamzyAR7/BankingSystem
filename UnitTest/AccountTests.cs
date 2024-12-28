@@ -1,13 +1,14 @@
 ﻿using Bank_System_PaySky.Data;
-using Bank_System_PaySky.Entites.AccountModdels;
-using Bank_System_PaySky.Services;
-using NUnit.Framework;
+using Bank_System_PaySky.Entities.AccountModels;
 using Bank_System_PaySky.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Bank_System_PaySky.Entities.AccountModdels;
 using Bank_System_PaySky.Models.Accounts;
-using Bank_System_PaySky.Exeptions;
+using Bank_System_PaySky.Services.AccountCreation;
+using Bank_System_PaySky.Services.AccountHelper;
+using Bank_System_PaySky.Services.Transactions;
+using NUnit.Framework;
+using Bank_System_PaySky.Services.AccountTransactionService;
 
 namespace UnitTest
 {
@@ -48,15 +49,14 @@ namespace UnitTest
         }
 
         /// <summary>
-        /// Saving one
+        /// Test for creating a saving account.
         /// </summary>
-        /// <returns></returns>
         [Test]
         public async Task CreateSavingAccount_ShouldWork()
         {
             var savingAccountRequest = new CreateSavingAccountRequest
             {
-                AccountNumbers = 1234567890,
+                AccountNumber = 1234567890,
                 Balance = 2000,
                 Interest = 5
             };
@@ -64,16 +64,20 @@ namespace UnitTest
             var result = await _accountCreationService.CreateSavingAccountAsync(savingAccountRequest);
             var account = await _accountHelper.GetAccountByIdAsync(result.AccountId);
 
-            Assert.That(account.AccountNumbers, Is.EqualTo(savingAccountRequest.AccountNumbers));
+            Assert.That(account.AccountNumber, Is.EqualTo(savingAccountRequest.AccountNumber));
             Assert.That(account.Balance, Is.EqualTo(savingAccountRequest.Balance));
-            Assert.That(((SavingAccount)account).Interest, Is.EqualTo(savingAccountRequest.Interest));
+            Assert.That(((SavingAccount)account).InterestRate, Is.EqualTo(savingAccountRequest.Interest));
         }
+
+        /// <summary>
+        /// Test for invalid saving account creation.
+        /// </summary>
         [Test]
         public async Task InvalidCreateSavingAccount_ShouldThrowException()
         {
             var savingAccountRequest = new CreateSavingAccountRequest
             {
-                AccountNumbers = 1234567890,
+                AccountNumber = 1234567890,
                 Balance = 2000,
                 Interest = 5
             };
@@ -82,15 +86,19 @@ namespace UnitTest
             Assert.ThrowsAsync<InvalidAccountNumberException>(async () =>
                 await _accountCreationService.CreateSavingAccountAsync(savingAccountRequest));
         }
+
+        /// <summary>
+        /// Test for withdrawing from a saving account.
+        /// </summary>
         [Test]
         public async Task WithdrawFromSavingAccount_ShouldDecreaseBalance()
         {
             var savingAccount = new SavingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumbers = 1234567890,
+                AccountNumber = 1234567890,
                 Balance = 2000,
-                Interest = 5
+                InterestRate = 5
             };
 
             await _dbContext.Accounts.AddAsync(savingAccount);
@@ -103,15 +111,18 @@ namespace UnitTest
             Assert.That(updatedAccount.Balance, Is.EqualTo(1500));
         }
 
+        /// <summary>
+        /// Test for withdrawing from a saving account exceeding balance.
+        /// </summary>
         [Test]
         public void WithdrawFromSavingAccount_ExceedingBalance_ShouldThrow()
         {
             var savingAccount = new SavingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumbers = 1234567890,
+                AccountNumber = 1234567890,
                 Balance = 2000,
-                Interest = 5
+                InterestRate = 5
             };
 
             _dbContext.Accounts.Add(savingAccount);
@@ -120,15 +131,19 @@ namespace UnitTest
             Assert.ThrowsAsync<InvalidAccountOperationException>(async () =>
                 await _accountTransactionService.WithdrawAsync(savingAccount.AccountId, 2500));
         }
+
+        /// <summary>
+        /// Test for adding interest to a saving account.
+        /// </summary>
         [Test]
         public async Task AddInterestToSavingAccount_ShouldIncreaseBalance()
         {
             var savingAccount = new SavingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumbers = 1234567890,
+                AccountNumber = 1234567890,
                 Balance = 2000,
-                Interest = 5
+                InterestRate = 5
             };
 
             await _dbContext.Accounts.AddAsync(savingAccount);
@@ -141,52 +156,57 @@ namespace UnitTest
             var expectedBalance = 2000 * Math.Pow(1 + (5 / 100.0), 2);
             Assert.That(updatedAccount.Balance, Is.EqualTo((decimal)expectedBalance).Within(0.01m));
         }
-        //====================================================================================================================
+
         /// <summary>
-        /// Checking one
+        /// Test for creating a checking account.
         /// </summary>
-        /// <returns></returns>
         [Test]
         public async Task CreateCheckingAccount_ShouldWork()
         {
-            var CheckingAccountRequest = new CreateCheckingAccountRequest
+            var checkingAccountRequest = new CreateCheckingAccountRequest
             {
-                AccountNumbers = 1234567890,
+                AccountNumber = 1234567890,
                 Balance = 2000,
                 Overdrafts = 200 // Optional, will default to 500 if not provided
             };
 
-            var result = await _accountCreationService.CreateCheckingAccountAsync(CheckingAccountRequest);
+            var result = await _accountCreationService.CreateCheckingAccountAsync(checkingAccountRequest);
             var account = await _accountHelper.GetAccountByIdAsync(result.AccountId);
 
-            Assert.That(account.AccountNumbers, Is.EqualTo(CheckingAccountRequest.AccountNumbers));
-            Assert.That(account.Balance, Is.EqualTo(CheckingAccountRequest.Balance));
-            Assert.That(((CheckingAccount)account).Overdrafts, Is.EqualTo(CheckingAccountRequest.Overdrafts));
+            Assert.That(account.AccountNumber, Is.EqualTo(checkingAccountRequest.AccountNumber));
+            Assert.That(account.Balance, Is.EqualTo(checkingAccountRequest.Balance));
+            Assert.That(((CheckingAccount)account).Overdrafts, Is.EqualTo(checkingAccountRequest.Overdrafts));
         }
 
+        /// <summary>
+        /// Test for invalid checking account creation.
+        /// </summary>
         [Test]
         public async Task InvalidAccountCreation_ShouldThrowException()
         {
-            var CheckingAccountRequest = new CreateCheckingAccountRequest
+            var checkingAccountRequest = new CreateCheckingAccountRequest
             {
-                AccountNumbers = 1234567890,
+                AccountNumber = 1234567890,
                 Balance = 1000,
                 Overdrafts = 500
             };
 
-            await _accountCreationService.CreateCheckingAccountAsync(CheckingAccountRequest);
+            await _accountCreationService.CreateCheckingAccountAsync(checkingAccountRequest);
 
             Assert.ThrowsAsync<InvalidAccountNumberException>(async () =>
-                await _accountCreationService.CreateCheckingAccountAsync(CheckingAccountRequest));
+                await _accountCreationService.CreateCheckingAccountAsync(checkingAccountRequest));
         }
-        [Test]
 
+        /// <summary>
+        /// Test for withdrawing from a checking account.
+        /// </summary>
+        [Test]
         public async Task WithdrawFromCheckingAccount_ShouldDecreaseBalance()
         {
             var checkingAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumbers = 1234567890,
+                AccountNumber = 1234567890,
                 Balance = 2000,
                 Overdrafts = 500
             };
@@ -200,13 +220,17 @@ namespace UnitTest
 
             Assert.That(updatedAccount.Balance, Is.EqualTo(-300));
         }
+
+        /// <summary>
+        /// Test for withdrawing from a checking account exceeding overdraft limit.
+        /// </summary>
         [Test]
         public void WithdrawFromCheckingAccount_ExceedingOverdraft_ShouldThrow()
         {
             var checkingAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumbers = 1234567890,
+                AccountNumber = 1234567890,
                 Balance = 2000,
                 Overdrafts = 500
             };
@@ -217,13 +241,17 @@ namespace UnitTest
             Assert.ThrowsAsync<InvalidAccountOperationException>(async () =>
                 await _accountTransactionService.WithdrawAsync(checkingAccount.AccountId, 2600));
         }
+
+        /// <summary>
+        /// Test for depositing into an account.
+        /// </summary>
         [Test]
         public async Task DepositIntoAccount_ShouldIncreaseBalance()
         {
             var checkingAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumbers = 1234567890,
+                AccountNumber = 1234567890,
                 Balance = 2000,
                 Overdrafts = 500
             };
@@ -238,13 +266,16 @@ namespace UnitTest
             Assert.That(updatedAccount.Balance, Is.EqualTo(2500));
         }
 
+        /// <summary>
+        /// Test for depositing an invalid amount into an account.
+        /// </summary>
         [Test]
         public void DepositIntoAccount_InvalidAmount_ShouldThrow()
         {
             var checkingAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumbers = 1234567890,
+                AccountNumber = 1234567890,
                 Balance = 2000,
                 Overdrafts = 500
             };
@@ -255,19 +286,17 @@ namespace UnitTest
             Assert.ThrowsAsync<InvalidAccountOperationException>(async () =>
                 await _accountTransactionService.DepositAsync(checkingAccount.AccountId, -500));
         }
-        //====================================================================================================================
 
         /// <summary>
-        /// Transefar
+        /// Test for transferring between accounts.
         /// </summary>
-        /// <returns></returns>
         [Test]
         public async Task TransferBetweenAccounts_ShouldWork()
         {
             var sourceAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumbers = 1234567890,
+                AccountNumber = 1234567890,
                 Balance = 1000,
                 Overdrafts = 500
             };
@@ -275,7 +304,7 @@ namespace UnitTest
             var targetAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumbers = 1234567891,
+                AccountNumber = 1234567891,
                 Balance = 500,
                 Overdrafts = 500
             };
@@ -292,13 +321,16 @@ namespace UnitTest
             Assert.That(updatedTarget.Balance, Is.EqualTo(700));
         }
 
+        /// <summary>
+        /// Test for transferring an invalid amount between accounts.
+        /// </summary>
         [Test]
         public void TransferBetweenAccounts_InvalidAmount_ShouldThrow()
         {
             var sourceAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumbers = 1234567890,
+                AccountNumber = 1234567890,
                 Balance = 1000,
                 Overdrafts = 500
             };
@@ -306,7 +338,7 @@ namespace UnitTest
             var targetAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumbers = 1234567891,
+                AccountNumber = 1234567891,
                 Balance = 500,
                 Overdrafts = 500
             };
@@ -317,18 +349,17 @@ namespace UnitTest
             Assert.ThrowsAsync<InvalidAccountOperationException>(async () =>
                 await _accountTransactionService.TransferAsync(sourceAccount.AccountId, targetAccount.AccountId, 1200));
         }
-        //====================================================================================================================
+
         /// <summary>
-        /// Update
+        /// Test for updating an account.
         /// </summary>
-        /// <returns></returns>
         [Test]
         public async Task UpdateAccount_ShouldWork()
         {
             var checkingAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
-                AccountNumbers = 1234567890,
+                AccountNumber = 1234567890,
                 Balance = 2000,
                 Overdrafts = 500
             };
@@ -346,6 +377,10 @@ namespace UnitTest
 
             Assert.That(updatedAccount.Balance, Is.EqualTo(updateRequest.Balance));
         }
+
+        /// <summary>
+        /// Test for updating an invalid account.
+        /// </summary>
         [Test]
         public void UpdateAccount_InvalidAccount_ShouldThrow()
         {
@@ -357,7 +392,6 @@ namespace UnitTest
             Assert.ThrowsAsync<AccountNotFoundException>(async () =>
                 await _accountCreationService.UpdateAccountAsync(Guid.NewGuid(), updateRequest));
         }
-     //====================================================================================================================
 
         [TearDown]
         public void TearDown()

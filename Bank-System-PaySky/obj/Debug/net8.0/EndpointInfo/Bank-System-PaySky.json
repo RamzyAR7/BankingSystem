@@ -700,12 +700,12 @@
     "schemas": {
       "CreateCheckingAccountRequest": {
         "required": [
-          "accountNumbers",
+          "accountNumber",
           "balance"
         ],
         "type": "object",
         "properties": {
-          "accountNumbers": {
+          "accountNumber": {
             "maximum": 9999999999,
             "minimum": 1000000000,
             "type": "number",
@@ -727,12 +727,12 @@
       },
       "CreateSavingAccountRequest": {
         "required": [
-          "accountNumbers",
+          "accountNumber",
           "balance"
         ],
         "type": "object",
         "properties": {
-          "accountNumbers": {
+          "accountNumber": {
             "maximum": 9999999999,
             "minimum": 1000000000,
             "type": "number",

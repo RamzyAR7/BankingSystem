@@ -1,13 +1,12 @@
 ﻿using Bank_System_PaySky.Data;
 using Bank_System_PaySky.Exceptions;
-using Bank_System_PaySky.Exeptions;
 using Bank_System_PaySky.Models.Accounts;
+using Bank_System_PaySky.Services.AccountHelper;
 using Microsoft.EntityFrameworkCore;
-using System.Transactions;
 
-namespace Bank_System_PaySky.Services
+namespace Bank_System_PaySky.Services.Transactions
 {
-    public class TransactionsService:ITransactionsService
+    public class TransactionsService : ITransactionsService
     {
         private readonly BankingDbContext _dbContext;
         private readonly IAccountHelperService _helper;
@@ -17,6 +16,8 @@ namespace Bank_System_PaySky.Services
             _helper = helper;
             _dbContext = dbContext;
         }
+
+        // Method to get all transactions
         public async Task<IEnumerable<TransactionResponse>> GetAllTransactionsAsync()
         {
             var transactions = await _dbContext.Transactions
@@ -34,7 +35,7 @@ namespace Bank_System_PaySky.Services
                         .Select(at => at.AccountId)
                         .DefaultIfEmpty()
                         .FirstOrDefault(),
-                    TypeOfOperation = t.Type,
+                    TypeOfOperation = t.TransactionType,
                     Amount = t.Amount,
                     Timestamp = t.Timestamp
                 }).ToListAsync();
@@ -42,13 +43,14 @@ namespace Bank_System_PaySky.Services
             return transactions;
         }
 
+        // Method to get transaction details by transaction ID
         public async Task<TransactionResponse> GetTransactionByIdAsync(Guid transactionId)
         {
             var transaction = await _helper.GetTransactionByIdAsync(transactionId);
 
             if (transaction == null)
             {
-                throw new TransactionNotFounfException($"Transaction with ID {transactionId} not found.");
+                throw new TransactionNotFoundException($"Transaction with ID {transactionId} not found.");
             }
 
             if (transaction.AccountTransactions == null)
@@ -69,13 +71,12 @@ namespace Bank_System_PaySky.Services
                     .Select(at => at.AccountId)
                     .DefaultIfEmpty()
                     .FirstOrDefault(),
-                TypeOfOperation = transaction.Type,
+                TypeOfOperation = transaction.TransactionType,
                 Amount = transaction.Amount,
                 Timestamp = transaction.Timestamp
             };
 
             return transactionResponse;
         }
-
     }
 }

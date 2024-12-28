@@ -1,16 +1,19 @@
-﻿using Bank_System_PaySky.Exceptions;
+﻿using Bank_System_PaySky.Entities.AccountModels;
+using Bank_System_PaySky.Exceptions;
 
-namespace Bank_System_PaySky.Entites.AccountModdels
+namespace Bank_System_PaySky.Entities.AccountModels
 {
     public class CheckingAccount : Account
     {
+        // Overdraft limit for the checking account
         public decimal Overdrafts { get; set; } = 500;
 
-        public override void WithDraw(decimal amount)
+        // Method to withdraw an amount from the account
+        public override void Withdraw(decimal amount)
         {
             if (amount <= 0)
             {
-                throw new InvalidAccountOperationException("Withdraw Amount must be greater than zero.");
+                throw new InvalidAccountOperationException("Withdraw amount must be greater than zero.");
             }
             else if (Balance + Overdrafts >= amount)
             {

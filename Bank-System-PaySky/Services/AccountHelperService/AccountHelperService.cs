@@ -41,5 +41,52 @@ namespace Bank_System_PaySky.Services.AccountHelper
             var account = await GetAccountByIdAsync(accountId);
             return account is SavingAccount;
         }
+
+        //Converts the amount from one currency to another
+        public async Task<decimal> ConvertAsync(string fromCurrencyId, string toCurrencyId, decimal amount)
+        {
+            if (amount <= 0)
+            {
+                throw new InvalidAccountOperationException("Amount to convert must be greater than zero.");
+            }
+            if (fromCurrencyId == toCurrencyId)
+            {
+                return amount;
+            }
+
+            // Fetch currencies
+            var currencies = await _dbContext.Currencies
+                .Where(c => c.CurrencyCode == fromCurrencyId || c.CurrencyCode == toCurrencyId)
+                .ToListAsync();
+
+            var fromCurrency = currencies.FirstOrDefault(c => c.CurrencyCode == fromCurrencyId);
+            var toCurrency = currencies.FirstOrDefault(c => c.CurrencyCode == toCurrencyId);
+
+            if (fromCurrency == null || toCurrency == null)
+            {
+                throw new InvalidAccountOperationException("One or both currencies are invalid.");
+            }
+
+            decimal convertedAmount;
+
+            if (fromCurrency.IsBase)
+            {
+                // Base to target
+                convertedAmount = amount * toCurrency.ExchangeRate;
+            }
+            else if (toCurrency.IsBase)
+            {
+                // Source to base
+                convertedAmount = amount / fromCurrency.ExchangeRate;
+            }
+            else
+            {
+                // Non-base to non-base
+                decimal baseAmount = amount / fromCurrency.ExchangeRate; // Convert source to base
+                convertedAmount = baseAmount * toCurrency.ExchangeRate;  // Convert base to target
+            }
+            return convertedAmount;
+            // Log for debugging
+        }
     }
 }

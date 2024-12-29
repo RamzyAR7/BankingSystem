@@ -6,7 +6,7 @@ namespace Bank_System_PaySky.Entities.AccountModels
     public class SavingAccount : Account
     {
         // Interest rate for the savings account
-        public decimal InterestRate { get; set; }
+        public decimal Interest { get; set; }
 
         // Method to add interest to the account balance over a number of years
         public void AddInterest(int years)
@@ -15,10 +15,9 @@ namespace Bank_System_PaySky.Entities.AccountModels
             {
                 throw new InvalidAccountOperationException("Years must be greater than zero.");
             }
-            for (int i = 0; i < years; i++)
-            {
-                Balance += (InterestRate / 100) * Balance;
-            }
+            
+            Balance *= (decimal)Math.Pow((double)(1 + Interest / 100), years);
+            
         }
 
         // Method to withdraw an amount from the account

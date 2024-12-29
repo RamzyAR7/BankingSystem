@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bank_System_PaySky.Migrations
 {
     [DbContext(typeof(BankingDbContext))]
-    [Migration("20241228150713_v1")]
-    partial class v1
+    [Migration("20241229030745_m1")]
+    partial class m1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,7 +31,7 @@ namespace Bank_System_PaySky.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("AccountNumber")
+                    b.Property<double>("AccountNumbers")
                         .HasColumnType("float");
 
                     b.Property<string>("AccountType")
@@ -42,7 +42,18 @@ namespace Bank_System_PaySky.Migrations
                     b.Property<decimal>("Balance")
                         .HasColumnType("decimal(18, 2)");
 
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("AccountId");
+
+                    b.HasIndex("CurrencyCode");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Accounts");
 
@@ -63,11 +74,66 @@ namespace Bank_System_PaySky.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(10)");
+
                     b.HasKey("AccountId", "TransactionId");
+
+                    b.HasIndex("CurrencyCode");
 
                     b.HasIndex("TransactionId");
 
                     b.ToTable("AccountTransactions");
+                });
+
+            modelBuilder.Entity("Bank_System_PaySky.Entities.CurrencyModel.Currency", b =>
+                {
+                    b.Property<string>("CurrencyCode")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<decimal>("ExchangeRate")
+                        .HasColumnType("decimal(18, 6)");
+
+                    b.Property<bool>("IsBase")
+                        .HasColumnType("bit");
+
+                    b.HasKey("CurrencyCode");
+
+                    b.ToTable("Currencies");
+
+                    b.HasData(
+                        new
+                        {
+                            CurrencyCode = "USD",
+                            ExchangeRate = 1.0m,
+                            IsBase = true
+                        },
+                        new
+                        {
+                            CurrencyCode = "EUR",
+                            ExchangeRate = 0.96m,
+                            IsBase = false
+                        },
+                        new
+                        {
+                            CurrencyCode = "GBP",
+                            ExchangeRate = 0.80m,
+                            IsBase = false
+                        },
+                        new
+                        {
+                            CurrencyCode = "EGP",
+                            ExchangeRate = 50.86m,
+                            IsBase = false
+                        },
+                        new
+                        {
+                            CurrencyCode = "SAR",
+                            ExchangeRate = 3.76m,
+                            IsBase = false
+                        });
                 });
 
             modelBuilder.Entity("Bank_System_PaySky.Entities.TransactionsModels.Transaction", b =>
@@ -91,6 +157,27 @@ namespace Bank_System_PaySky.Migrations
                     b.ToTable("Transactions");
                 });
 
+            modelBuilder.Entity("Bank_System_PaySky.Entities.UserModels.Users", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("Bank_System_PaySky.Entities.AccountModels.CheckingAccount", b =>
                 {
                     b.HasBaseType("Bank_System_PaySky.Entities.AccountModels.Account");
@@ -105,10 +192,29 @@ namespace Bank_System_PaySky.Migrations
                 {
                     b.HasBaseType("Bank_System_PaySky.Entities.AccountModels.Account");
 
-                    b.Property<decimal>("InterestRate")
+                    b.Property<decimal>("Interest")
                         .HasColumnType("decimal(18, 2)");
 
                     b.HasDiscriminator().HasValue("Savings");
+                });
+
+            modelBuilder.Entity("Bank_System_PaySky.Entities.AccountModels.Account", b =>
+                {
+                    b.HasOne("Bank_System_PaySky.Entities.CurrencyModel.Currency", "Currency")
+                        .WithMany("Accounts")
+                        .HasForeignKey("CurrencyCode")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Bank_System_PaySky.Entities.UserModels.Users", "User")
+                        .WithMany("Accounts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Currency");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Bank_System_PaySky.Entities.AccountTransactionsModels.AccountTransactions", b =>
@@ -119,6 +225,12 @@ namespace Bank_System_PaySky.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Bank_System_PaySky.Entities.CurrencyModel.Currency", "Currency")
+                        .WithMany("AccountTransactions")
+                        .HasForeignKey("CurrencyCode")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Bank_System_PaySky.Entities.TransactionsModels.Transaction", "Transaction")
                         .WithMany("AccountTransactions")
                         .HasForeignKey("TransactionId")
@@ -126,6 +238,8 @@ namespace Bank_System_PaySky.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
+
+                    b.Navigation("Currency");
 
                     b.Navigation("Transaction");
                 });
@@ -135,9 +249,21 @@ namespace Bank_System_PaySky.Migrations
                     b.Navigation("AccountTransactions");
                 });
 
+            modelBuilder.Entity("Bank_System_PaySky.Entities.CurrencyModel.Currency", b =>
+                {
+                    b.Navigation("AccountTransactions");
+
+                    b.Navigation("Accounts");
+                });
+
             modelBuilder.Entity("Bank_System_PaySky.Entities.TransactionsModels.Transaction", b =>
                 {
                     b.Navigation("AccountTransactions");
+                });
+
+            modelBuilder.Entity("Bank_System_PaySky.Entities.UserModels.Users", b =>
+                {
+                    b.Navigation("Accounts");
                 });
 #pragma warning restore 612, 618
         }

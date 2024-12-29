@@ -131,28 +131,169 @@
             <param name="id">The transaction ID.</param>
             <returns>The transaction details.</returns>
         </member>
-        <member name="T:Bank_System_PaySky.Migrations.v1">
+        <member name="T:Bank_System_PaySky.Controllers.UserCreationController">
+            <summary>
+            Controller for managing user creation, updates, and deletion.
+            </summary>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.UserCreationController.#ctor(Bank_System_PaySky.Services.UserCreationService.IUserCreationService,Microsoft.Extensions.Logging.ILogger{Bank_System_PaySky.Controllers.UserCreationController})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Bank_System_PaySky.Controllers.UserCreationController"/> class.
+            </summary>
+            <param name="userCreationService">The user creation service.</param>
+            <param name="logger">The logger instance.</param>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.UserCreationController.GetUserAsync(System.Guid)">
+            <summary>
+            Gets a user by their ID.
+            </summary>
+            <param name="userId">The user ID.</param>
+            <returns>The user details.</returns>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.UserCreationController.GetUsersAsync">
+            <summary>
+            Gets all users.
+            </summary>
+            <returns>A list of all users.</returns>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.UserCreationController.CreateUserAsync(Bank_System_PaySky.Dtos.Users.CreateUserRequest)">
+            <summary>
+            Creates a new user.
+            </summary>
+            <param name="userRequest">The user creation request.</param>
+            <returns>The created user details.</returns>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.UserCreationController.UpdateUserAsync(System.Guid,Bank_System_PaySky.Dtos.Users.UpdateUserRequest)">
+            <summary>
+            Updates an existing user.
+            </summary>
+            <param name="userId">The user ID.</param>
+            <param name="userRequest">The update user request.</param>
+            <returns>The updated user details.</returns>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.UserCreationController.DeleteUserAsync(System.Guid)">
+            <summary>
+            Deletes a user by their ID.
+            </summary>
+            <param name="userId">The user ID.</param>
+            <returns>A success message.</returns>
+        </member>
+        <member name="T:Bank_System_PaySky.Models.Accounts.CreateCheckingAccountRequest">
+            <summary>
+            Request model for creating a checking account.
+            </summary>
+        </member>
+        <member name="P:Bank_System_PaySky.Models.Accounts.CreateCheckingAccountRequest.AccountNumbers">
+            <summary>
+            Gets or sets the account number. Must be a 10-digit number.
+            </summary>
+        </member>
+        <member name="P:Bank_System_PaySky.Models.Accounts.CreateCheckingAccountRequest.Balance">
+            <summary>
+            Gets or sets the balance. Must be a positive value.
+            </summary>
+        </member>
+        <member name="P:Bank_System_PaySky.Models.Accounts.CreateCheckingAccountRequest.Overdrafts">
+            <summary>
+            Gets or sets the overdrafts. Must be a positive value.
+            </summary>
+        </member>
+        <member name="M:Bank_System_PaySky.Models.Accounts.CreateCheckingAccountRequest.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Bank_System_PaySky.Models.Accounts.CreateCheckingAccountRequest"/> class.
+            Sets the default value for overdrafts to 500.
+            </summary>
+        </member>
+        <member name="P:Bank_System_PaySky.Models.Accounts.CreateCheckingAccountRequest.CurrencyCode">
+            <summary>
+            Gets or sets the currency code. Must be one of the following: USD, EGP, SAR, EUR, GBP.
+            </summary>
+        </member>
+        <member name="P:Bank_System_PaySky.Models.Accounts.CreateCheckingAccountRequest.UserId">
+            <summary>
+            Gets or sets the user ID.
+            </summary>
+        </member>
+        <member name="T:Bank_System_PaySky.Models.Accounts.CreateSavingAccountRequest">
+            <summary>
+            Request model for creating a savings account.
+            </summary>
+        </member>
+        <member name="P:Bank_System_PaySky.Models.Accounts.CreateSavingAccountRequest.AccountNumbers">
+            <summary>
+            Gets or sets the account number. Must be a 10-digit number.
+            </summary>
+        </member>
+        <member name="P:Bank_System_PaySky.Models.Accounts.CreateSavingAccountRequest.Balance">
+            <summary>
+            Gets or sets the balance. Must be a positive value.
+            </summary>
+        </member>
+        <member name="P:Bank_System_PaySky.Models.Accounts.CreateSavingAccountRequest.Interest">
+            <summary>
+            Gets or sets the interest rate. Must be a positive value.
+            </summary>
+        </member>
+        <member name="P:Bank_System_PaySky.Models.Accounts.CreateSavingAccountRequest.CurrencyCode">
+            <summary>
+            Gets or sets the currency code. Must be one of the following: USD, EGP, SAR, EUR, GBP.
+            </summary>
+        </member>
+        <member name="P:Bank_System_PaySky.Models.Accounts.CreateSavingAccountRequest.UserId">
+            <summary>
+            Gets or sets the user ID.
+            </summary>
+        </member>
+        <member name="T:Bank_System_PaySky.Dtos.Accounts.CurrencyCodeValidation">
+            <summary>
+            Validates that the currency code is one of the allowed values: USD, EGP, SAR, EUR, GBP.
+            </summary>
+        </member>
+        <member name="M:Bank_System_PaySky.Dtos.Accounts.CurrencyCodeValidation.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Validates the specified value with respect to the current validation attribute.
+            </summary>
+            <param name="value">The value to validate.</param>
+            <param name="validationContext">The context information about the validation operation.</param>
+            <returns>An instance of the <see cref="T:System.ComponentModel.DataAnnotations.ValidationResult"/> class.</returns>
+        </member>
+        <member name="T:Bank_System_PaySky.Dtos.Users.CreateUserRequest">
+            <summary>
+            Request model for creating a user.
+            </summary>
+        </member>
+        <member name="P:Bank_System_PaySky.Dtos.Users.CreateUserRequest.Username">
+            <summary>
+            Gets or sets the username. Must be between 3 and 50 characters.
+            </summary>
+        </member>
+        <member name="P:Bank_System_PaySky.Dtos.Users.CreateUserRequest.Email">
+            <summary>
+            Gets or sets the email address. Must be a valid email address from a valid domain.
+            </summary>
+        </member>
+        <member name="T:Bank_System_PaySky.Dtos.Users.CustomEmailValidation">
+            <summary>
+            Custom validation attribute for email domain.
+            </summary>
+        </member>
+        <member name="M:Bank_System_PaySky.Dtos.Users.CustomEmailValidation.IsValid(System.Object)">
+            <summary>
+            Validates the specified email address to ensure it has a valid domain.
+            </summary>
+            <param name="value">The value to validate.</param>
+            <returns>true if the email domain is valid; otherwise, false.</returns>
+        </member>
+        <member name="T:Bank_System_PaySky.Migrations.m1">
             <inheritdoc />
         </member>
-        <member name="M:Bank_System_PaySky.Migrations.v1.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:Bank_System_PaySky.Migrations.m1.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:Bank_System_PaySky.Migrations.v1.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:Bank_System_PaySky.Migrations.m1.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:Bank_System_PaySky.Migrations.v1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:Bank_System_PaySky.Migrations.v2">
-            <inheritdoc />
-        </member>
-        <member name="M:Bank_System_PaySky.Migrations.v2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Bank_System_PaySky.Migrations.v2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Bank_System_PaySky.Migrations.v2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:Bank_System_PaySky.Migrations.m1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

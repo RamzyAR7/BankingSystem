@@ -4,8 +4,10 @@ using Bank_System_PaySky.Services.AccountCreation;
 using Bank_System_PaySky.Services.AccountHelper;
 using Bank_System_PaySky.Services.AccountTransactionService;
 using Bank_System_PaySky.Services.Transactions;
+using Bank_System_PaySky.Services.UserCreationService;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +28,7 @@ builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
 // Register services for dependency injection
 builder.Services.AddScoped<IAccountHelperService, AccountHelperService>();
+builder.Services.AddScoped<IUserCreationService, UserCreationService>();
 builder.Services.AddScoped<ITransactionsService, TransactionsService>();
 builder.Services.AddScoped<IAccountTransactionService, AccountTransactionService>();
 builder.Services.AddScoped<IAccountCreationService, AccountCreationService>();
@@ -55,6 +58,22 @@ builder.Services.AddSwaggerGen(c =>
     var xmlFile = "Bank-System-PaySky.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
+
+    // Use tags to group endpoints
+
+    c.DocInclusionPredicate((name, api) => true);
+    c.OrderActionsBy((apiDesc) =>
+    {
+        var groupName = apiDesc.GroupName ?? "Default";
+        return groupName switch
+        {
+            "Users" => "1",
+            "Accounts" => "2",
+            "AccountTransactions" => "3",
+            "Transactions" => "4",
+            _ => "5"
+        };
+    });
 });
 
 var app = builder.Build();

@@ -66,7 +66,7 @@ namespace UnitTest
 
             Assert.That(account.AccountNumbers, Is.EqualTo(savingAccountRequest.AccountNumbers));
             Assert.That(account.Balance, Is.EqualTo(savingAccountRequest.Balance));
-            Assert.That(((SavingAccount)account).InterestRate, Is.EqualTo(savingAccountRequest.Interest));
+            Assert.That(((SavingAccount)account).Interest, Is.EqualTo(savingAccountRequest.Interest));
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace UnitTest
                 AccountId = Guid.NewGuid(),
                 AccountNumbers = 1234567890,
                 Balance = 2000,
-                InterestRate = 5
+                Interest = 5
             };
 
             await _dbContext.Accounts.AddAsync(savingAccount);
@@ -122,7 +122,7 @@ namespace UnitTest
                 AccountId = Guid.NewGuid(),
                 AccountNumbers = 1234567890,
                 Balance = 2000,
-                InterestRate = 5
+                Interest = 5
             };
 
             _dbContext.Accounts.Add(savingAccount);
@@ -143,7 +143,7 @@ namespace UnitTest
                 AccountId = Guid.NewGuid(),
                 AccountNumbers = 1234567890,
                 Balance = 2000,
-                InterestRate = 5
+                Interest = 5
             };
 
             await _dbContext.Accounts.AddAsync(savingAccount);

@@ -1,4 +1,6 @@
-﻿namespace Bank_System_PaySky.Models.Accounts
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Bank_System_PaySky.Models.Accounts
 {
     public class AccountResponse
     {
@@ -8,5 +10,7 @@
         public decimal Balance { get; set; }
         public decimal? Interest { get; set; }
         public decimal? Overdrafts { get; set; }
+        public string CurrencyCode { get; set; }
+        public Guid UserId { get; set; }
     }
 }

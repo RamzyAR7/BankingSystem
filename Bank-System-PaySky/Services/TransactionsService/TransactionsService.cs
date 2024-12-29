@@ -35,8 +35,18 @@ namespace Bank_System_PaySky.Services.Transactions
                         .Select(at => at.AccountId)
                         .DefaultIfEmpty()
                         .FirstOrDefault(),
+                    SourceCurrancyType = t.AccountTransactions
+                        .Where(at => at.AccountStatus == "Source")
+                        .Select(at => at.CurrencyCode)
+                        .DefaultIfEmpty()
+                        .FirstOrDefault(),
+                    TargetCurrancyType = t.AccountTransactions
+                        .Where(at => at.AccountStatus == "Target")
+                        .Select(at => at.CurrencyCode)
+                        .DefaultIfEmpty()
+                        .FirstOrDefault(),
                     TypeOfOperation = t.TransactionType,
-                    Amount = t.Amount,
+                    AmountToTarget = t.Amount,
                     Timestamp = t.Timestamp
                 }).ToListAsync();
 
@@ -71,11 +81,20 @@ namespace Bank_System_PaySky.Services.Transactions
                     .Select(at => at.AccountId)
                     .DefaultIfEmpty()
                     .FirstOrDefault(),
+                SourceCurrancyType = transaction.AccountTransactions
+                    .Where(at => at.AccountStatus == "Source")
+                    .Select(at => at.CurrencyCode)
+                    .DefaultIfEmpty()
+                    .FirstOrDefault(),
+                TargetCurrancyType = transaction.AccountTransactions
+                    .Where(at => at.AccountStatus == "Target")
+                    .Select(at => at.CurrencyCode)
+                    .DefaultIfEmpty()
+                    .FirstOrDefault(),
                 TypeOfOperation = transaction.TransactionType,
-                Amount = transaction.Amount,
+                AmountToTarget = transaction.Amount,
                 Timestamp = transaction.Timestamp
             };
-
             return transactionResponse;
         }
     }

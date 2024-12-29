@@ -8,6 +8,8 @@ namespace Bank_System_PaySky.Services.AccountHelper
         Task<Account> GetAccountByIdAsync(Guid accountId);
         Task<Transaction> GetTransactionByIdAsync(Guid transactionId);
         Task<bool> IsSavingAccountAsync(Guid accountId);
+        Task<decimal> ConvertAsync(string fromCurrencyId, string toCurrencyId, decimal amount);
+
     }
 
 }

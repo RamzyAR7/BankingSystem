@@ -10,6 +10,241 @@
     "version": "v1"
   },
   "paths": {
+    "/api/users/{userId}": {
+      "get": {
+        "tags": [
+          "UserCreation"
+        ],
+        "summary": "Gets a user by their ID.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The user ID.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "UserCreation"
+        ],
+        "summary": "Updates an existing user.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The user ID.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The update user request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "UserCreation"
+        ],
+        "summary": "Deletes a user by their ID.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The user ID.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": [
+          "UserCreation"
+        ],
+        "summary": "Gets all users.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "UserCreation"
+        ],
+        "summary": "Creates a new user.",
+        "requestBody": {
+          "description": "The user creation request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/accounts/{id}": {
       "get": {
         "tags": [
@@ -701,7 +936,9 @@
       "CreateCheckingAccountRequest": {
         "required": [
           "accountNumbers",
-          "balance"
+          "balance",
+          "currencyCode",
+          "userId"
         ],
         "type": "object",
         "properties": {
@@ -709,26 +946,42 @@
             "maximum": 9999999999,
             "minimum": 1000000000,
             "type": "number",
+            "description": "Gets or sets the account number. Must be a 10-digit number.",
             "format": "double"
           },
           "balance": {
             "minimum": 0,
             "type": "number",
+            "description": "Gets or sets the balance. Must be a positive value.",
             "format": "double"
           },
           "overdrafts": {
             "minimum": 0,
             "type": "number",
+            "description": "Gets or sets the overdrafts. Must be a positive value.",
             "format": "double",
             "nullable": true
+          },
+          "currencyCode": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Gets or sets the currency code. Must be one of the following: USD, EGP, SAR, EUR, GBP."
+          },
+          "userId": {
+            "type": "string",
+            "description": "Gets or sets the user ID.",
+            "format": "uuid"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Request model for creating a checking account."
       },
       "CreateSavingAccountRequest": {
         "required": [
           "accountNumbers",
-          "balance"
+          "balance",
+          "currencyCode",
+          "userId"
         ],
         "type": "object",
         "properties": {
@@ -736,21 +989,57 @@
             "maximum": 9999999999,
             "minimum": 1000000000,
             "type": "number",
+            "description": "Gets or sets the account number. Must be a 10-digit number.",
             "format": "double"
           },
           "balance": {
             "minimum": 0,
             "type": "number",
+            "description": "Gets or sets the balance. Must be a positive value.",
             "format": "double"
           },
           "interest": {
             "minimum": 0,
             "type": "number",
-            "format": "double",
-            "nullable": true
+            "description": "Gets or sets the interest rate. Must be a positive value.",
+            "format": "double"
+          },
+          "currencyCode": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Gets or sets the currency code. Must be one of the following: USD, EGP, SAR, EUR, GBP."
+          },
+          "userId": {
+            "type": "string",
+            "description": "Gets or sets the user ID.",
+            "format": "uuid"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Request model for creating a savings account."
+      },
+      "CreateUserRequest": {
+        "required": [
+          "email",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "maxLength": 50,
+            "minLength": 3,
+            "type": "string",
+            "description": "Gets or sets the username. Must be between 3 and 50 characters."
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Gets or sets the email address. Must be a valid email address from a valid domain.",
+            "format": "email"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request model for creating a user."
       },
       "DepositRequest": {
         "required": [
@@ -832,6 +1121,26 @@
             "minimum": 0,
             "type": "number",
             "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateUserRequest": {
+        "required": [
+          "email",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "maxLength": 50,
+            "minLength": 3,
+            "type": "string"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
           }
         },
         "additionalProperties": false

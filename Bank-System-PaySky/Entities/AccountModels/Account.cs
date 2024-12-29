@@ -1,4 +1,6 @@
 ﻿using Bank_System_PaySky.Entities.AccountTransactionsModels;
+using Bank_System_PaySky.Entities.CurrencyModel;
+using Bank_System_PaySky.Entities.UserModels;
 using Bank_System_PaySky.Exceptions;
 
 namespace Bank_System_PaySky.Entities.AccountModels
@@ -16,6 +18,17 @@ namespace Bank_System_PaySky.Entities.AccountModels
 
         // Collection of account transactions
         public virtual ICollection<AccountTransactions> AccountTransactions { get; set; }
+
+        // Unique identifier for the user foriegn key to the user model
+        public Guid UserId { get; set; }
+        // Navigation property to the user
+        public virtual Users User { get; set; }
+
+        // uniq identifier for the currency foriegn key to the currency model
+        public string CurrencyCode { get; set; }
+        // Navigation property to the currency
+        public virtual Currency Currency { get; set; }
+
 
         // Method to deposit an amount into the account
         public virtual void Deposit(decimal amount)

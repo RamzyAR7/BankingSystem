@@ -10,6 +10,8 @@ namespace Bank_System_PaySky.Controllers
     /// </summary>
     [ApiController]
     [Route("api/transaction")]
+    [ApiExplorerSettings(GroupName = "Transaction")]
+
     public class TransactionsController : ControllerBase
     {
         private readonly ITransactionsService _transactions;

@@ -1,4 +1,5 @@
 ﻿using Bank_System_PaySky.Entities.AccountModels;
+using Bank_System_PaySky.Entities.CurrencyModel;
 using Bank_System_PaySky.Entities.TransactionsModels;
 
 namespace Bank_System_PaySky.Entities.AccountTransactionsModels
@@ -19,5 +20,11 @@ namespace Bank_System_PaySky.Entities.AccountTransactionsModels
 
         // Status of the account
         public string AccountStatus { get; set; }
+
+        // unique identifier for the currency foriegn key to the currency model
+        public string CurrencyCode { get; set; }
+        // Navigation property to the currency
+        public virtual Currency Currency { get; set; }
+
     }
 }

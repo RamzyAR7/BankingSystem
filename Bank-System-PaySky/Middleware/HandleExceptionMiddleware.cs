@@ -51,6 +51,9 @@ namespace Bank_System_PaySky.Middleware
                 InvalidAccountOperationException => (int)HttpStatusCode.BadRequest,
                 InvalidAccountNumberException => (int)HttpStatusCode.BadRequest,
                 TransactionNotFoundException => (int)HttpStatusCode.NotFound,
+                UserNotFoundException => (int)HttpStatusCode.NotFound,
+                InvaildUserNameException => (int)HttpStatusCode.BadRequest,
+                InvaildUserOperationException => (int)HttpStatusCode.BadRequest,
                 DbUpdateExceptionHandle => (int)HttpStatusCode.BadRequest,
                 _ => (int)HttpStatusCode.InternalServerError
             };

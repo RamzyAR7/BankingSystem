@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Bank-System-PaySky")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9c2a78be0244c37d60528a726539c117f258a759")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c2adc9b42f877bd4984da4bf4ee7bda288221828")]
 [assembly: System.Reflection.AssemblyProductAttribute("Bank-System-PaySky")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Bank-System-PaySky")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

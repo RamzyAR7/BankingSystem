@@ -47,7 +47,7 @@ namespace Bank_System_PaySky.Services.AccountHelper
         {
             if (amount <= 0)
             {
-                throw new InvalidAccountOperationException("Amount to convert must be greater than zero.");
+                throw new  InvaildUserOperationException("Amount to convert must be greater than zero.");
             }
             if (fromCurrencyId == toCurrencyId)
             {
@@ -64,7 +64,7 @@ namespace Bank_System_PaySky.Services.AccountHelper
 
             if (fromCurrency == null || toCurrency == null)
             {
-                throw new InvalidAccountOperationException("One or both currencies are invalid.");
+                throw new InvaildUserOperationException("One or both currencies are invalid.");
             }
 
             decimal convertedAmount;

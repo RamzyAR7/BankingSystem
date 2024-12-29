@@ -1126,21 +1126,18 @@
         "additionalProperties": false
       },
       "UpdateUserRequest": {
-        "required": [
-          "email",
-          "username"
-        ],
         "type": "object",
         "properties": {
           "username": {
             "maxLength": 50,
             "minLength": 3,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "email": {
-            "minLength": 1,
             "type": "string",
-            "format": "email"
+            "format": "email",
+            "nullable": true
           }
         },
         "additionalProperties": false

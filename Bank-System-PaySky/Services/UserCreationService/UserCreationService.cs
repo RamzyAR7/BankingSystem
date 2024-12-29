@@ -26,7 +26,7 @@ namespace Bank_System_PaySky.Services.UserCreationService
 
             if (user == null)
             {
-                throw new AccountNotFoundException("user not found"); // or throw an exception if user not found
+                throw new UserNotFoundException("Users not found"); // or throw an exception if user not found
             }
             var response = new GetUserResponce
             {
@@ -39,7 +39,10 @@ namespace Bank_System_PaySky.Services.UserCreationService
                     AccountId = a.AccountId,
                     AccountNumbers = a.AccountNumbers,
                     Balance = a.Balance,
-                    CurrencyCode = a.CurrencyCode
+                    CurrencyCode = a.CurrencyCode,
+                    Interest = a is SavingAccount savingAccount ? savingAccount.Interest : null,
+                    Overdrafts = a is CheckingAccount checkingAccount ? checkingAccount.Overdrafts : null,
+                    UserId = a.UserId
                 }).ToList()
             };
 
@@ -63,7 +66,11 @@ namespace Bank_System_PaySky.Services.UserCreationService
                     AccountId = a.AccountId,
                     AccountNumbers = a.AccountNumbers,
                     Balance = a.Balance,
-                    CurrencyCode = a.CurrencyCode
+                    CurrencyCode = a.CurrencyCode,
+                    Interest = a is SavingAccount savingAccount ? savingAccount.Interest : null,
+                    Overdrafts = a is CheckingAccount checkingAccount ? checkingAccount.Overdrafts : null,
+                    UserId = a.UserId
+
                 }).ToList()
             });
             return response;
@@ -98,7 +105,6 @@ namespace Bank_System_PaySky.Services.UserCreationService
                 Username = newUser.Username,
                 Email = newUser.Email
             };
-
             return response;
         }
 
@@ -107,7 +113,7 @@ namespace Bank_System_PaySky.Services.UserCreationService
             // Check if all fields are null or empty
             if (string.IsNullOrEmpty(user.Username) && string.IsNullOrEmpty(user.Email))
             {
-                throw new ArgumentException("At least one field must be provided for update.");
+                throw new InvaildUserNameException("User details are required.");
             }
 
             var existingUser = await _dbContext.Users
@@ -116,7 +122,7 @@ namespace Bank_System_PaySky.Services.UserCreationService
 
             if (existingUser == null)
             {
-                throw new AccountNotFoundException("User not found");
+                throw new UserNotFoundException("User not found");
             }
 
             // Update the user details only if they are provided
@@ -135,6 +141,7 @@ namespace Bank_System_PaySky.Services.UserCreationService
             // Return the updated user details
             var response = new GetUserResponce
             {
+                UserId = existingUser.UserId,
                 Username = existingUser.Username,
                 Email = existingUser.Email,
                 // Password should not be exposed in the response
@@ -143,10 +150,12 @@ namespace Bank_System_PaySky.Services.UserCreationService
                     AccountId = a.AccountId,
                     AccountNumbers = a.AccountNumbers,
                     Balance = a.Balance,
-                    CurrencyCode = a.CurrencyCode
+                    CurrencyCode = a.CurrencyCode,
+                    Interest = a is SavingAccount savingAccount ? savingAccount.Interest : null,
+                    Overdrafts = a is CheckingAccount checkingAccount ? checkingAccount.Overdrafts : null,
+                    UserId = a.UserId
                 }).ToList()
             };
-
             return response;
         }
 
@@ -158,7 +167,7 @@ namespace Bank_System_PaySky.Services.UserCreationService
 
             if (existingUser == null)
             {
-                throw new AccountNotFoundException("User not found");
+                throw new UserNotFoundException("User not found");
             }
 
             // Delete the user from the database

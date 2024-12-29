@@ -9,6 +9,10 @@ using Bank_System_PaySky.Services.AccountHelper;
 using Bank_System_PaySky.Services.Transactions;
 using NUnit.Framework;
 using Bank_System_PaySky.Services.AccountTransactionService;
+using Bank_System_PaySky.Entities.CurrencyModel;
+using Bank_System_PaySky.Entities.UserModels;
+using Bank_System_PaySky.Services.UserCreationService;
+using Bank_System_PaySky.Dtos.Users;
 
 namespace UnitTest
 {
@@ -21,6 +25,7 @@ namespace UnitTest
         private IAccountTransactionService _accountTransactionService;
         private IAccountCreationService _accountCreationService;
         private ITransactionsService _transactionsService;
+        private IUserCreationService _userCreationService;
         private string connectionString;
         private IConfiguration configuration;
 
@@ -46,19 +51,72 @@ namespace UnitTest
             _accountCreationService = new AccountCreationService(_dbContext, _accountHelper);
             _accountTransactionService = new AccountTransactionService(_dbContext, _accountHelper);
             _transactionsService = new TransactionsService(_dbContext, _accountHelper);
+            _userCreationService = new UserCreationService(_dbContext);
         }
 
+        private async Task<Users> CreateUserAsync()
+        {
+            var user = new Users
+            {
+                UserId = Guid.NewGuid(),
+                Username = "testuser",
+                Email = "testuser@example.com"
+            };
+            await _dbContext.Users.AddAsync(user);
+            await _dbContext.SaveChangesAsync();
+            return user;
+        }
+        /// <summary>
+        /// Test for creating a user.
+        /// </summary>
+        [Test]
+        public async Task CreateUser_ShouldWork()
+        {
+            var userRequest = new CreateUserRequest
+            {
+                Username = "newuser",
+                Email = "newuser@example.com"
+            };
+
+            var user = await _userCreationService.CreateUserAsync(userRequest);
+
+            Assert.That(user.Username, Is.EqualTo(userRequest.Username));
+            Assert.That(user.Email, Is.EqualTo(userRequest.Email));
+        }
+        /// <summary>
+        /// Test for updating a user.
+        /// </summary>
+        [Test]
+        public async Task UpdateUser_ShouldWork()
+        {
+            var user = await CreateUserAsync();
+
+            var updateUserRequest = new UpdateUserRequest
+            {
+                Username = "updateduser",
+                Email = "updateduser@example.com"
+            };
+
+            var updatedUser = await _userCreationService.UpdateUserAsync(user.UserId, updateUserRequest);
+
+            Assert.That(updatedUser.Username, Is.EqualTo(updateUserRequest.Username));
+            Assert.That(updatedUser.Email, Is.EqualTo(updateUserRequest.Email));
+        }
         /// <summary>
         /// Test for creating a saving account.
         /// </summary>
         [Test]
         public async Task CreateSavingAccount_ShouldWork()
         {
+            var user = await CreateUserAsync();
+
             var savingAccountRequest = new CreateSavingAccountRequest
             {
                 AccountNumbers = 1234567890,
                 Balance = 2000,
-                Interest = 5
+                Interest = 5,
+                CurrencyCode = "USD",
+                UserId = user.UserId
             };
 
             var result = await _accountCreationService.CreateSavingAccountAsync(savingAccountRequest);
@@ -75,11 +133,15 @@ namespace UnitTest
         [Test]
         public async Task InvalidCreateSavingAccount_ShouldThrowException()
         {
+            var user = await CreateUserAsync();
+
             var savingAccountRequest = new CreateSavingAccountRequest
             {
                 AccountNumbers = 1234567890,
                 Balance = 2000,
-                Interest = 5
+                Interest = 5,
+                CurrencyCode = "USD",
+                UserId = user.UserId
             };
 
             await _accountCreationService.CreateSavingAccountAsync(savingAccountRequest);
@@ -93,12 +155,16 @@ namespace UnitTest
         [Test]
         public async Task WithdrawFromSavingAccount_ShouldDecreaseBalance()
         {
+            var user = await CreateUserAsync();
+
             var savingAccount = new SavingAccount
             {
                 AccountId = Guid.NewGuid(),
                 AccountNumbers = 1234567890,
                 Balance = 2000,
-                Interest = 5
+                Interest = 5,
+                CurrencyCode = "USD",
+                UserId = user.UserId
             };
 
             await _dbContext.Accounts.AddAsync(savingAccount);
@@ -117,12 +183,16 @@ namespace UnitTest
         [Test]
         public void WithdrawFromSavingAccount_ExceedingBalance_ShouldThrow()
         {
+            var user = CreateUserAsync().Result;
+
             var savingAccount = new SavingAccount
             {
                 AccountId = Guid.NewGuid(),
                 AccountNumbers = 1234567890,
                 Balance = 2000,
-                Interest = 5
+                Interest = 5,
+                CurrencyCode = "USD",
+                UserId = user.UserId
             };
 
             _dbContext.Accounts.Add(savingAccount);
@@ -138,12 +208,16 @@ namespace UnitTest
         [Test]
         public async Task AddInterestToSavingAccount_ShouldIncreaseBalance()
         {
+            var user = await CreateUserAsync();
+
             var savingAccount = new SavingAccount
             {
                 AccountId = Guid.NewGuid(),
                 AccountNumbers = 1234567890,
                 Balance = 2000,
-                Interest = 5
+                Interest = 5,
+                CurrencyCode = "USD",
+                UserId = user.UserId
             };
 
             await _dbContext.Accounts.AddAsync(savingAccount);
@@ -163,11 +237,15 @@ namespace UnitTest
         [Test]
         public async Task CreateCheckingAccount_ShouldWork()
         {
+            var user = await CreateUserAsync();
+
             var checkingAccountRequest = new CreateCheckingAccountRequest
             {
                 AccountNumbers = 1234567890,
                 Balance = 2000,
-                Overdrafts = 200 // Optional, will default to 500 if not provided
+                Overdrafts = 200, // Optional, will default to 500 if not provided
+                CurrencyCode = "USD",
+                UserId = user.UserId
             };
 
             var result = await _accountCreationService.CreateCheckingAccountAsync(checkingAccountRequest);
@@ -184,11 +262,15 @@ namespace UnitTest
         [Test]
         public async Task InvalidAccountCreation_ShouldThrowException()
         {
+            var user = await CreateUserAsync();
+
             var checkingAccountRequest = new CreateCheckingAccountRequest
             {
                 AccountNumbers = 1234567890,
                 Balance = 1000,
-                Overdrafts = 500
+                Overdrafts = 500,
+                CurrencyCode = "USD",
+                UserId = user.UserId
             };
 
             await _accountCreationService.CreateCheckingAccountAsync(checkingAccountRequest);
@@ -203,12 +285,16 @@ namespace UnitTest
         [Test]
         public async Task WithdrawFromCheckingAccount_ShouldDecreaseBalance()
         {
+            var user = await CreateUserAsync();
+
             var checkingAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
                 AccountNumbers = 1234567890,
                 Balance = 2000,
-                Overdrafts = 500
+                Overdrafts = 500,
+                CurrencyCode = "USD",
+                UserId = user.UserId
             };
 
             await _dbContext.Accounts.AddAsync(checkingAccount);
@@ -227,12 +313,16 @@ namespace UnitTest
         [Test]
         public void WithdrawFromCheckingAccount_ExceedingOverdraft_ShouldThrow()
         {
+            var user = CreateUserAsync().Result;
+
             var checkingAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
                 AccountNumbers = 1234567890,
                 Balance = 2000,
-                Overdrafts = 500
+                Overdrafts = 500,
+                CurrencyCode = "USD",
+                UserId = user.UserId
             };
 
             _dbContext.Accounts.Add(checkingAccount);
@@ -248,12 +338,16 @@ namespace UnitTest
         [Test]
         public async Task DepositIntoAccount_ShouldIncreaseBalance()
         {
+            var user = await CreateUserAsync();
+
             var checkingAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
                 AccountNumbers = 1234567890,
                 Balance = 2000,
-                Overdrafts = 500
+                Overdrafts = 500,
+                CurrencyCode = "USD",
+                UserId = user.UserId
             };
 
             await _dbContext.Accounts.AddAsync(checkingAccount);
@@ -272,12 +366,16 @@ namespace UnitTest
         [Test]
         public void DepositIntoAccount_InvalidAmount_ShouldThrow()
         {
+            var user = CreateUserAsync().Result;
+
             var checkingAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
                 AccountNumbers = 1234567890,
                 Balance = 2000,
-                Overdrafts = 500
+                Overdrafts = 500,
+                CurrencyCode = "USD",
+                UserId = user.UserId
             };
 
             _dbContext.Accounts.Add(checkingAccount);
@@ -293,12 +391,16 @@ namespace UnitTest
         [Test]
         public async Task TransferBetweenAccounts_ShouldWork()
         {
+            var user = await CreateUserAsync();
+
             var sourceAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
                 AccountNumbers = 1234567890,
                 Balance = 1000,
-                Overdrafts = 500
+                Overdrafts = 500,
+                CurrencyCode = "USD",
+                UserId = user.UserId
             };
 
             var targetAccount = new CheckingAccount
@@ -306,7 +408,9 @@ namespace UnitTest
                 AccountId = Guid.NewGuid(),
                 AccountNumbers = 1234567891,
                 Balance = 500,
-                Overdrafts = 500
+                Overdrafts = 500,
+                CurrencyCode = "USD",
+                UserId = user.UserId
             };
 
             await _dbContext.Accounts.AddRangeAsync(sourceAccount, targetAccount);
@@ -327,12 +431,16 @@ namespace UnitTest
         [Test]
         public void TransferBetweenAccounts_InvalidAmount_ShouldThrow()
         {
+            var user = CreateUserAsync().Result;
+
             var sourceAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
                 AccountNumbers = 1234567890,
                 Balance = 1000,
-                Overdrafts = 500
+                Overdrafts = 500,
+                CurrencyCode = "USD",
+                UserId = user.UserId
             };
 
             var targetAccount = new CheckingAccount
@@ -340,7 +448,9 @@ namespace UnitTest
                 AccountId = Guid.NewGuid(),
                 AccountNumbers = 1234567891,
                 Balance = 500,
-                Overdrafts = 500
+                Overdrafts = 500,
+                CurrencyCode = "USD",
+                UserId = user.UserId
             };
 
             _dbContext.Accounts.AddRange(sourceAccount, targetAccount);
@@ -349,6 +459,88 @@ namespace UnitTest
             Assert.ThrowsAsync<InvalidAccountOperationException>(async () =>
                 await _accountTransactionService.TransferAsync(sourceAccount.AccountId, targetAccount.AccountId, 1200));
         }
+        /// <summary>
+        /// Test for transferring between accounts with different currencies.
+        /// </summary>
+        [Test]
+        public async Task TransferBetweenAccountsWithDifferentCurrencies_zero_ShouldWork()
+        {
+            var user = await CreateUserAsync();
+
+            var sourceAccount = new CheckingAccount
+            {
+                AccountId = Guid.NewGuid(),
+                AccountNumbers = 1234567890,
+                Balance = 1000,
+                Overdrafts = 500,
+                CurrencyCode = "USD",
+                UserId = user.UserId
+            };
+
+            var targetAccount = new CheckingAccount
+            {
+                AccountId = Guid.NewGuid(),
+                AccountNumbers = 1234567891,
+                Balance = 500,
+                Overdrafts = 500,
+                CurrencyCode = "EUR",
+                UserId = user.UserId
+            };
+
+            await _dbContext.Accounts.AddRangeAsync(sourceAccount, targetAccount);
+            await _dbContext.SaveChangesAsync();
+
+            await _accountTransactionService.TransferAsync(sourceAccount.AccountId, targetAccount.AccountId, 200);
+
+            var updatedSource = await _accountHelper.GetAccountByIdAsync(sourceAccount.AccountId);
+            var updatedTarget = await _accountHelper.GetAccountByIdAsync(targetAccount.AccountId);
+
+            var expectedTargetBalance = 500 + (200 * 0.96m); // 200 USD to EUR conversion
+
+            Assert.That(updatedSource.Balance, Is.EqualTo(800));
+            Assert.That(updatedTarget.Balance, Is.EqualTo(expectedTargetBalance));
+        }
+        /// <summary>
+        /// Test for transferring between accounts with different currencies.
+        /// </summary>
+        [Test]
+        public async Task TransferBetweenAccountsWithDifferentCurrencies_one_ShouldWork()
+        {
+            var user = await CreateUserAsync();
+
+            var sourceAccount = new CheckingAccount
+            {
+                AccountId = Guid.NewGuid(),
+                AccountNumbers = 1234567890,
+                Balance = 1000,
+                Overdrafts = 500,
+                CurrencyCode = "EGP",
+                UserId = user.UserId
+            };
+
+            var targetAccount = new CheckingAccount
+            {
+                AccountId = Guid.NewGuid(),
+                AccountNumbers = 1234567891,
+                Balance = 500,
+                Overdrafts = 500,
+                CurrencyCode = "EUR",
+                UserId = user.UserId
+            };
+
+            await _dbContext.Accounts.AddRangeAsync(sourceAccount, targetAccount);
+            await _dbContext.SaveChangesAsync();
+
+            await _accountTransactionService.TransferAsync(sourceAccount.AccountId, targetAccount.AccountId, 200);
+
+            var updatedSource = await _accountHelper.GetAccountByIdAsync(sourceAccount.AccountId);
+            var updatedTarget = await _accountHelper.GetAccountByIdAsync(targetAccount.AccountId);
+
+            var expectedTargetBalance = 500 + (200 / 50.86m * 0.96m); // 200 EGP to EUR conversion
+
+            Assert.That(updatedSource.Balance, Is.EqualTo(800));
+            Assert.That(updatedTarget.Balance, Is.EqualTo(expectedTargetBalance).Within(0.01m));
+        }
 
         /// <summary>
         /// Test for updating an account.
@@ -356,12 +548,16 @@ namespace UnitTest
         [Test]
         public async Task UpdateAccount_ShouldWork()
         {
+            var user = await CreateUserAsync();
+
             var checkingAccount = new CheckingAccount
             {
                 AccountId = Guid.NewGuid(),
                 AccountNumbers = 1234567890,
                 Balance = 2000,
-                Overdrafts = 500
+                Overdrafts = 500,
+                CurrencyCode = "USD",
+                UserId = user.UserId
             };
 
             await _dbContext.Accounts.AddAsync(checkingAccount);

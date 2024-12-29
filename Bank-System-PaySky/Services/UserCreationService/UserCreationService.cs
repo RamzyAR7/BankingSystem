@@ -33,7 +33,6 @@ namespace Bank_System_PaySky.Services.UserCreationService
                 UserId = user.UserId,
                 Username = user.Username,
                 Email = user.Email,
-                // Password should not be exposed in the response
                 Accounts = user.Accounts.Select(a => new AccountResponse
                 {
                     AccountId = a.AccountId,
@@ -60,7 +59,6 @@ namespace Bank_System_PaySky.Services.UserCreationService
                 UserId = user.UserId,
                 Username = user.Username,
                 Email = user.Email,
-                // Password should not be exposed in the response
                 Accounts = user.Accounts.Select(a => new AccountResponse
                 {
                     AccountId = a.AccountId,
@@ -144,7 +142,6 @@ namespace Bank_System_PaySky.Services.UserCreationService
                 UserId = existingUser.UserId,
                 Username = existingUser.Username,
                 Email = existingUser.Email,
-                // Password should not be exposed in the response
                 Accounts = existingUser.Accounts.Select(a => new AccountResponse
                 {
                     AccountId = a.AccountId,

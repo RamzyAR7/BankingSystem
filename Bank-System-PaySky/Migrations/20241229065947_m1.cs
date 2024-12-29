@@ -90,7 +90,7 @@ namespace Bank_System_PaySky.Migrations
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TransactionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AccountStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CurrencyCode = table.Column<string>(type: "nvarchar(10)", nullable: false)
+                    CurrencyCode = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -101,12 +101,6 @@ namespace Bank_System_PaySky.Migrations
                         principalTable: "Accounts",
                         principalColumn: "AccountId",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AccountTransactions_Currencies_CurrencyCode",
-                        column: x => x.CurrencyCode,
-                        principalTable: "Currencies",
-                        principalColumn: "CurrencyCode",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AccountTransactions_Transactions_TransactionId",
                         column: x => x.TransactionId,
@@ -136,11 +130,6 @@ namespace Bank_System_PaySky.Migrations
                 name: "IX_Accounts_UserId",
                 table: "Accounts",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AccountTransactions_CurrencyCode",
-                table: "AccountTransactions",
-                column: "CurrencyCode");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AccountTransactions_TransactionId",

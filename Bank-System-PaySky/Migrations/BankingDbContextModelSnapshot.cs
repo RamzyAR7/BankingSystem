@@ -73,11 +73,9 @@ namespace Bank_System_PaySky.Migrations
 
                     b.Property<string>("CurrencyCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AccountId", "TransactionId");
-
-                    b.HasIndex("CurrencyCode");
 
                     b.HasIndex("TransactionId");
 
@@ -222,12 +220,6 @@ namespace Bank_System_PaySky.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Bank_System_PaySky.Entities.CurrencyModel.Currency", "Currency")
-                        .WithMany("AccountTransactions")
-                        .HasForeignKey("CurrencyCode")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Bank_System_PaySky.Entities.TransactionsModels.Transaction", "Transaction")
                         .WithMany("AccountTransactions")
                         .HasForeignKey("TransactionId")
@@ -235,8 +227,6 @@ namespace Bank_System_PaySky.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
-
-                    b.Navigation("Currency");
 
                     b.Navigation("Transaction");
                 });
@@ -248,8 +238,6 @@ namespace Bank_System_PaySky.Migrations
 
             modelBuilder.Entity("Bank_System_PaySky.Entities.CurrencyModel.Currency", b =>
                 {
-                    b.Navigation("AccountTransactions");
-
                     b.Navigation("Accounts");
                 });
 

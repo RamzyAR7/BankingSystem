@@ -127,13 +127,6 @@ namespace Bank_System_PaySky.Data
                 .HasForeignKey(a => a.CurrencyCode)
                 .OnDelete(DeleteBehavior.Restrict);  // Do not delete Accounts when Currency is deleted
 
-            //Configure the relationship between Transaction and Currency
-            modelBuilder.Entity<AccountTransactions>()
-                .HasOne(t => t.Currency)
-                .WithMany(c => c.AccountTransactions)
-                .HasForeignKey(t => t.CurrencyCode)
-                .OnDelete(DeleteBehavior.Restrict);  // Do not delete Transactions when Currency is deleted
-
             // Seed data for Currency table with updated exchange rates
             modelBuilder.Entity<Currency>().HasData(
                 new Currency { CurrencyCode = "USD", ExchangeRate = 1.0m, IsBase = true }, // US Dollar // Base Currency

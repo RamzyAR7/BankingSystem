@@ -13,6 +13,5 @@ namespace Bank_System_PaySky.Entities.CurrencyModel
         public bool IsBase { get; set; }
 
         public virtual ICollection<Account> Accounts { get; set; }
-        public virtual ICollection<AccountTransactions>  AccountTransactions { get; set; }
     }
 }

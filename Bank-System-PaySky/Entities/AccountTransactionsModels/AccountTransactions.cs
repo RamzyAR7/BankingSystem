@@ -22,6 +22,6 @@ namespace Bank_System_PaySky.Entities.AccountTransactionsModels
         public string AccountStatus { get; set; }
 
         // Currency code of the account
-        public string CurrencyCode { get; set; }
+        public string TransactionCurrancy { get; set; }
     }
 }

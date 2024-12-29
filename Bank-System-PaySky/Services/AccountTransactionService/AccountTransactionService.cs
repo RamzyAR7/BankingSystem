@@ -44,7 +44,7 @@ namespace Bank_System_PaySky.Services.AccountTransactionService
             {
                 AccountId = accountId,
                 TransactionId = transaction.TransactionId,
-                CurrencyCode = account.CurrencyCode,
+                TransactionCurrancy = account.CurrencyCode,
                 AccountStatus = "Source"
             };
 
@@ -71,7 +71,7 @@ namespace Bank_System_PaySky.Services.AccountTransactionService
             {
                 AccountId = accountId,
                 TransactionId = transaction.TransactionId,
-                CurrencyCode = account.CurrencyCode,
+                TransactionCurrancy = account.CurrencyCode,
                 AccountStatus = "Source"
             };
             await _dbContext.AccountTransactions.AddAsync(accountTransaction);
@@ -138,7 +138,7 @@ namespace Bank_System_PaySky.Services.AccountTransactionService
                 {
                     AccountId = sourceAccount.AccountId,
                     TransactionId = transactionRecord.TransactionId,
-                    CurrencyCode = sourceAccount.CurrencyCode,
+                    TransactionCurrancy = sourceAccount.CurrencyCode,
                     AccountStatus = "Source"
                 };
 
@@ -146,7 +146,7 @@ namespace Bank_System_PaySky.Services.AccountTransactionService
                 {
                     AccountId = targetAccount.AccountId,
                     TransactionId = transactionRecord.TransactionId,
-                    CurrencyCode = targetAccount.CurrencyCode,
+                    TransactionCurrancy = targetAccount.CurrencyCode,
                     AccountStatus = "Target"
                 };
 

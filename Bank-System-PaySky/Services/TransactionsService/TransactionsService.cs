@@ -37,12 +37,12 @@ namespace Bank_System_PaySky.Services.Transactions
                         .FirstOrDefault(),
                     SourceCurrancyType = t.AccountTransactions
                         .Where(at => at.AccountStatus == "Source")
-                        .Select(at => at.CurrencyCode)
+                        .Select(at => at.TransactionCurrancy)
                         .DefaultIfEmpty()
                         .FirstOrDefault(),
                     TargetCurrancyType = t.AccountTransactions
                         .Where(at => at.AccountStatus == "Target")
-                        .Select(at => at.CurrencyCode)
+                        .Select(at => at.TransactionCurrancy)
                         .DefaultIfEmpty()
                         .FirstOrDefault(),
                     TypeOfOperation = t.TransactionType,
@@ -83,12 +83,12 @@ namespace Bank_System_PaySky.Services.Transactions
                     .FirstOrDefault(),
                 SourceCurrancyType = transaction.AccountTransactions
                     .Where(at => at.AccountStatus == "Source")
-                    .Select(at => at.CurrencyCode)
+                    .Select(at => at.TransactionCurrancy)
                     .DefaultIfEmpty()
                     .FirstOrDefault(),
                 TargetCurrancyType = transaction.AccountTransactions
                     .Where(at => at.AccountStatus == "Target")
-                    .Select(at => at.CurrencyCode)
+                    .Select(at => at.TransactionCurrancy)
                     .DefaultIfEmpty()
                     .FirstOrDefault(),
                 TypeOfOperation = transaction.TransactionType,

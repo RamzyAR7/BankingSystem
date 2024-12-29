@@ -296,5 +296,17 @@
         <member name="M:Bank_System_PaySky.Migrations.m1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:Bank_System_PaySky.Migrations.m2">
+            <inheritdoc />
+        </member>
+        <member name="M:Bank_System_PaySky.Migrations.m2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Bank_System_PaySky.Migrations.m2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Bank_System_PaySky.Migrations.m2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

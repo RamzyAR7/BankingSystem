@@ -163,7 +163,21 @@ namespace Bank_System_PaySky.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("Username")
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -171,6 +185,16 @@ namespace Bank_System_PaySky.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("c81e1901-ec0c-414c-be3a-9a5693270bb0"),
+                            Email = "admin@gmail.com",
+                            IsAdmin = true,
+                            Password = "$2a$11$jbWlcKbt3neZMOscxS3bIOxNWSo2kY2GnaL447VV7GCfQtoalciz.",
+                            UserName = "Admin"
+                        });
                 });
 
             modelBuilder.Entity("Bank_System_PaySky.Entities.AccountModels.CheckingAccount", b =>

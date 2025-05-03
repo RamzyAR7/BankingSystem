@@ -31,8 +31,9 @@ namespace Bank_System_PaySky.Services.UserCreationService
             var response = new GetUserResponce
             {
                 UserId = user.UserId,
-                Username = user.Username,
+                UserName = user.UserName,
                 Email = user.Email,
+                IsAdmin = user.IsAdmin,
                 Accounts = user.Accounts.Select(a => new AccountResponse
                 {
                     AccountId = a.AccountId,
@@ -57,8 +58,9 @@ namespace Bank_System_PaySky.Services.UserCreationService
             var response = users.Select(user => new GetUserResponce
             {
                 UserId = user.UserId,
-                Username = user.Username,
+                UserName = user.UserName,
                 Email = user.Email,
+                IsAdmin = user.IsAdmin,
                 Accounts = user.Accounts.Select(a => new AccountResponse
                 {
                     AccountId = a.AccountId,
@@ -81,7 +83,7 @@ namespace Bank_System_PaySky.Services.UserCreationService
             }
 
             var existingUser = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.Username == user.Username);
+                .FirstOrDefaultAsync(u => u.UserName == user.UserName);
 
             if (existingUser != null)
             {
@@ -91,8 +93,10 @@ namespace Bank_System_PaySky.Services.UserCreationService
             var newUser = new Users
             {
                 UserId = Guid.NewGuid(), // Auto-generate UserId
-                Username = user.Username,
-                Email = user.Email
+                UserName = user.UserName,
+                Email = user.Email,
+                Password = BCrypt.Net.BCrypt.HashPassword(user.Password), // Hash the password
+                IsAdmin = user.IsAdmin
             };
             await _dbContext.Users.AddAsync(newUser);
             await _dbContext.SaveChangesAsync();
@@ -100,8 +104,9 @@ namespace Bank_System_PaySky.Services.UserCreationService
             var response = new GetUserResponce
             {
                 UserId = newUser.UserId,
-                Username = newUser.Username,
-                Email = newUser.Email
+                UserName = newUser.UserName,
+                Email = newUser.Email,
+                IsAdmin = newUser.IsAdmin,
             };
             return response;
         }
@@ -126,13 +131,20 @@ namespace Bank_System_PaySky.Services.UserCreationService
             // Update the user details only if they are provided
             if (!string.IsNullOrEmpty(user.Username))
             {
-                existingUser.Username = user.Username;
+                existingUser.UserName = user.Username;
             }
             if (!string.IsNullOrEmpty(user.Email))
             {
                 existingUser.Email = user.Email;
             }
-
+            if (!string.IsNullOrEmpty(user.Password))
+            {
+                existingUser.Password = BCrypt.Net.BCrypt.HashPassword(user.Password); // Hash the password
+            }
+            if (user.IsAdmin != null)
+            {
+                existingUser.IsAdmin = user.IsAdmin;
+            }
             // Save the changes to the database
             await _dbContext.SaveChangesAsync();
 
@@ -140,8 +152,9 @@ namespace Bank_System_PaySky.Services.UserCreationService
             var response = new GetUserResponce
             {
                 UserId = existingUser.UserId,
-                Username = existingUser.Username,
+                UserName = existingUser.UserName,
                 Email = existingUser.Email,
+                IsAdmin = existingUser.IsAdmin,
                 Accounts = existingUser.Accounts.Select(a => new AccountResponse
                 {
                     AccountId = a.AccountId,

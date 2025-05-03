@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Ahmed Ramzy\\source\\repos\\Bank-System\\UnitTest\\UnitTest.csproj": {}
+    "C:\\Users\\Ahmed Ramzy\\PaySky\\BankingSystem\\UnitTest\\UnitTest.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Ahmed Ramzy\\source\\repos\\Bank-System\\Bank-System-PaySky\\Bank-System-PaySky.csproj": {
+    "C:\\Users\\Ahmed Ramzy\\PaySky\\BankingSystem\\Bank-System-PaySky\\Bank-System-PaySky.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ahmed Ramzy\\source\\repos\\Bank-System\\Bank-System-PaySky\\Bank-System-PaySky.csproj",
+        "projectUniqueName": "C:\\Users\\Ahmed Ramzy\\PaySky\\BankingSystem\\Bank-System-PaySky\\Bank-System-PaySky.csproj",
         "projectName": "Bank-System-PaySky",
-        "projectPath": "C:\\Users\\Ahmed Ramzy\\source\\repos\\Bank-System\\Bank-System-PaySky\\Bank-System-PaySky.csproj",
+        "projectPath": "C:\\Users\\Ahmed Ramzy\\PaySky\\BankingSystem\\Bank-System-PaySky\\Bank-System-PaySky.csproj",
         "packagesPath": "C:\\Users\\Ahmed Ramzy\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ahmed Ramzy\\source\\repos\\Bank-System\\Bank-System-PaySky\\obj\\",
+        "outputPath": "C:\\Users\\Ahmed Ramzy\\PaySky\\BankingSystem\\Bank-System-PaySky\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -44,12 +44,20 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
@@ -118,18 +126,18 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Ahmed Ramzy\\source\\repos\\Bank-System\\UnitTest\\UnitTest.csproj": {
+    "C:\\Users\\Ahmed Ramzy\\PaySky\\BankingSystem\\UnitTest\\UnitTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ahmed Ramzy\\source\\repos\\Bank-System\\UnitTest\\UnitTest.csproj",
+        "projectUniqueName": "C:\\Users\\Ahmed Ramzy\\PaySky\\BankingSystem\\UnitTest\\UnitTest.csproj",
         "projectName": "UnitTest",
-        "projectPath": "C:\\Users\\Ahmed Ramzy\\source\\repos\\Bank-System\\UnitTest\\UnitTest.csproj",
+        "projectPath": "C:\\Users\\Ahmed Ramzy\\PaySky\\BankingSystem\\UnitTest\\UnitTest.csproj",
         "packagesPath": "C:\\Users\\Ahmed Ramzy\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ahmed Ramzy\\source\\repos\\Bank-System\\UnitTest\\obj\\",
+        "outputPath": "C:\\Users\\Ahmed Ramzy\\PaySky\\BankingSystem\\UnitTest\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -150,8 +158,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Ahmed Ramzy\\source\\repos\\Bank-System\\Bank-System-PaySky\\Bank-System-PaySky.csproj": {
-                "projectPath": "C:\\Users\\Ahmed Ramzy\\source\\repos\\Bank-System\\Bank-System-PaySky\\Bank-System-PaySky.csproj"
+              "C:\\Users\\Ahmed Ramzy\\PaySky\\BankingSystem\\Bank-System-PaySky\\Bank-System-PaySky.csproj": {
+                "projectPath": "C:\\Users\\Ahmed Ramzy\\PaySky\\BankingSystem\\Bank-System-PaySky\\Bank-System-PaySky.csproj"
               }
             }
           }
@@ -166,7 +174,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -227,7 +235,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

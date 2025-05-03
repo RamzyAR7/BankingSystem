@@ -1,3 +1,4 @@
+using Bank_System_PaySky.Auth;
 using Bank_System_PaySky.Data;
 using Bank_System_PaySky.Middleware;
 using Bank_System_PaySky.Services.AccountCreation;
@@ -5,10 +6,11 @@ using Bank_System_PaySky.Services.AccountHelper;
 using Bank_System_PaySky.Services.AccountTransactionService;
 using Bank_System_PaySky.Services.Transactions;
 using Bank_System_PaySky.Services.UserCreationService;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Reflection;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +34,27 @@ builder.Services.AddScoped<IUserCreationService, UserCreationService>();
 builder.Services.AddScoped<ITransactionsService, TransactionsService>();
 builder.Services.AddScoped<IAccountTransactionService, AccountTransactionService>();
 builder.Services.AddScoped<IAccountCreationService, AccountCreationService>();
+builder.Services.AddScoped<IJWTService, JWTService>();
+builder.Services.AddScoped<IUserLoginService, UserLoginService>();
+
+var jwt = builder.Configuration.GetSection("jwt").Get<Jwt>();
+builder.Services.AddSingleton(jwt);
+builder.Services.AddAuthentication()
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, Options =>
+    {
+        Options.SaveToken = true;
+        Options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+
+            ValidIssuer = jwt.Issuer,
+            ValidAudience = jwt.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwt.SigningKey)),
+            ValidateLifetime = true
+        };
+    });
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -60,19 +83,45 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 
     // Use tags to group endpoints
-
     c.DocInclusionPredicate((name, api) => true);
     c.OrderActionsBy((apiDesc) =>
     {
         var groupName = apiDesc.GroupName ?? "Default";
         return groupName switch
         {
+            "Auth" => "0",
             "Users" => "1",
             "Accounts" => "2",
             "AccountTransactions" => "3",
             "Transactions" => "4",
             _ => "5"
         };
+    });
+
+    // Add JWT Bearer Authentication to Swagger
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter the JWT Token from Login"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
     });
 });
 
@@ -97,7 +146,6 @@ app.UseHttpsRedirection();
 
 // Use the custom exception middleware before other middlewares
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-
 app.UseAuthorization();
 
 app.MapControllers();

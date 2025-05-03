@@ -106,6 +106,26 @@
             <param name="years">The number of years.</param>
             <returns>A success message.</returns>
         </member>
+        <member name="T:Bank_System_PaySky.Controllers.AuthController">
+            <summary>
+            Controller for managing user authentication and token generation.
+            </summary>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.AuthController.#ctor(Bank_System_PaySky.Auth.IUserLoginService,Microsoft.Extensions.Logging.ILogger{Bank_System_PaySky.Controllers.AuthController})">
+            <summary>
+            initializes a new instance of the <see cref="T:Bank_System_PaySky.Controllers.AuthController"/> class.
+            </summary>
+            <param name="logger"> The logger instance.</param>
+            <param name="userLoginService"> The user login service instance.</param>
+        </member>
+        <member name="M:Bank_System_PaySky.Controllers.AuthController.Login(Bank_System_PaySky.Dtos.Users.UserLoginDto)">
+            <summary>
+            Logs in a user and generates a token.
+            </summary>
+            <param name="request"></param>
+            <returns>fullToken</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Bank_System_PaySky.Controllers.AuthController.RefreshToken(Bank_System_PaySky.Dtos.Users.RefreshTokenReqDto)" -->
         <member name="T:Bank_System_PaySky.Controllers.TransactionsController">
             <summary>
             Controller for managing transactions.
@@ -262,7 +282,7 @@
             Request model for creating a user.
             </summary>
         </member>
-        <member name="P:Bank_System_PaySky.Dtos.Users.CreateUserRequest.Username">
+        <member name="P:Bank_System_PaySky.Dtos.Users.CreateUserRequest.UserName">
             <summary>
             Gets or sets the username. Must be between 3 and 50 characters.
             </summary>
@@ -270,6 +290,20 @@
         <member name="P:Bank_System_PaySky.Dtos.Users.CreateUserRequest.Email">
             <summary>
             Gets or sets the email address. Must be a valid email address from a valid domain.
+            </summary>
+        </member>
+        <member name="P:Bank_System_PaySky.Dtos.Users.CreateUserRequest.Password">
+            <summary>
+            
+            Gets or sets the password. Must be between 8 and 100 characters, contain at least one uppercase letter, one lowercase letter, one digit, and one special character.
+            
+            </summary>
+        </member>
+        <member name="P:Bank_System_PaySky.Dtos.Users.CreateUserRequest.IsAdmin">
+            <summary>
+            
+            Gets or sets a value indicating whether the user is an admin. Default is false.
+            
             </summary>
         </member>
         <member name="T:Bank_System_PaySky.Dtos.Users.CustomEmailValidation">
@@ -284,28 +318,38 @@
             <param name="value">The value to validate.</param>
             <returns>true if the email domain is valid; otherwise, false.</returns>
         </member>
-        <member name="T:Bank_System_PaySky.Migrations.m1">
+        <member name="P:Bank_System_PaySky.Dtos.Users.UserLoginDto.Username">
+            <summary>
+            Gets or sets the username of the user.
+            </summary>
+        </member>
+        <member name="P:Bank_System_PaySky.Dtos.Users.UserLoginDto.Password">
+            <summary>
+            Gets or sets the password of the user.
+            </summary>
+        </member>
+        <member name="T:Bank_System_PaySky.Migrations.init">
             <inheritdoc />
         </member>
-        <member name="M:Bank_System_PaySky.Migrations.m1.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:Bank_System_PaySky.Migrations.init.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:Bank_System_PaySky.Migrations.m1.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:Bank_System_PaySky.Migrations.init.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:Bank_System_PaySky.Migrations.m1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:Bank_System_PaySky.Migrations.init.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
-        <member name="T:Bank_System_PaySky.Migrations.m2">
+        <member name="T:Bank_System_PaySky.Migrations.UpdateModel">
             <inheritdoc />
         </member>
-        <member name="M:Bank_System_PaySky.Migrations.m2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:Bank_System_PaySky.Migrations.UpdateModel.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:Bank_System_PaySky.Migrations.m2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:Bank_System_PaySky.Migrations.UpdateModel.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:Bank_System_PaySky.Migrations.m2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:Bank_System_PaySky.Migrations.UpdateModel.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

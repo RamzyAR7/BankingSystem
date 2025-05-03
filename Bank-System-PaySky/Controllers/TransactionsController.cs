@@ -1,6 +1,7 @@
 ﻿using Bank_System_PaySky.Exceptions;
 using Bank_System_PaySky.Models.Accounts;
 using Bank_System_PaySky.Services.Transactions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bank_System_PaySky.Controllers
@@ -34,6 +35,8 @@ namespace Bank_System_PaySky.Controllers
         /// <returns>A list of all transactions.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAllTransactions()
         {
             var reqId = HttpContext.Items["RequestId"]?.ToString();
@@ -51,6 +54,7 @@ namespace Bank_System_PaySky.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "user, admin")]
         public async Task<IActionResult> GetTransactionById(Guid id)
         {
             var reqId = HttpContext.Items["RequestId"]?.ToString();

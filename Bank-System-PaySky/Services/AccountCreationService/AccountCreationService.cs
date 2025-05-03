@@ -89,7 +89,7 @@ namespace Bank_System_PaySky.Services.AccountCreation
                 Balance = account.Balance,
                 Overdrafts = account.Overdrafts.Value,
                 CurrencyCode = account.CurrencyCode,
-                UserId = account.UserId
+                UserId = account.UserId,
             };
             await _dbContext.Accounts.AddAsync(newAccount);
             await _dbContext.SaveChangesAsync();

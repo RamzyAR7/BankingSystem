@@ -1,6 +1,7 @@
 ﻿using Bank_System_PaySky.Dtos.Users;
 using Bank_System_PaySky.Exceptions;
 using Bank_System_PaySky.Services.UserCreationService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using Swashbuckle.AspNetCore.Annotations;
@@ -13,6 +14,8 @@ namespace Bank_System_PaySky.Controllers
     [ApiController]
     [Route("api/users")]
     [ApiExplorerSettings(GroupName = "Users")]
+    [Authorize(Roles = "admin")]
+
     public class UserCreationController : ControllerBase
     {
         private readonly IUserCreationService _userCreationService;

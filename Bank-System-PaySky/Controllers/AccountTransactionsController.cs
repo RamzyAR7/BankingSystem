@@ -1,7 +1,9 @@
 ﻿using Bank_System_PaySky.Exceptions;
 using Bank_System_PaySky.Models.Transactions;
 using Bank_System_PaySky.Services.AccountTransactionService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NUnit.Framework;
 
 namespace Bank_System_PaySky.Controllers
 {
@@ -36,6 +38,7 @@ namespace Bank_System_PaySky.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Deposit([FromBody] DepositRequest request)
         {
             var reqId = HttpContext.Items["RequestId"]?.ToString();
@@ -56,6 +59,7 @@ namespace Bank_System_PaySky.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "user, admin")]
         public async Task<IActionResult> Withdraw([FromBody] WithdrawRequest request)
         {
             var reqId = HttpContext.Items["RequestId"]?.ToString();
@@ -76,6 +80,7 @@ namespace Bank_System_PaySky.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "user, admin")]
         public async Task<IActionResult> Transfer([FromBody] TransferRequest request)
         {
             var reqId = HttpContext.Items["RequestId"]?.ToString();
@@ -93,6 +98,7 @@ namespace Bank_System_PaySky.Controllers
         [HttpGet("{accountId}/balance")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "user, admin")]
         public async Task<IActionResult> GetBalance(Guid accountId)
         {
             var reqId = HttpContext.Items["RequestId"]?.ToString();
@@ -112,6 +118,7 @@ namespace Bank_System_PaySky.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> AddInterest([FromQuery] Guid accountId, [FromQuery] int years)
         {
             var reqId = HttpContext.Items["RequestId"]?.ToString();

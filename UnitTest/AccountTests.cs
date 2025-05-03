@@ -59,7 +59,7 @@ namespace UnitTest
             var user = new Users
             {
                 UserId = Guid.NewGuid(),
-                Username = "testuser",
+                UserName = "testuser",
                 Email = "testuser@example.com"
             };
             await _dbContext.Users.AddAsync(user);
@@ -74,13 +74,13 @@ namespace UnitTest
         {
             var userRequest = new CreateUserRequest
             {
-                Username = "newuser",
+                UserName = "newuser",
                 Email = "newuser@example.com"
             };
 
             var user = await _userCreationService.CreateUserAsync(userRequest);
 
-            Assert.That(user.Username, Is.EqualTo(userRequest.Username));
+            Assert.That(user.UserName, Is.EqualTo(userRequest.UserName));
             Assert.That(user.Email, Is.EqualTo(userRequest.Email));
         }
         /// <summary>
@@ -99,7 +99,7 @@ namespace UnitTest
 
             var updatedUser = await _userCreationService.UpdateUserAsync(user.UserId, updateUserRequest);
 
-            Assert.That(updatedUser.Username, Is.EqualTo(updateUserRequest.Username));
+            Assert.That(updatedUser.UserName, Is.EqualTo(updateUserRequest.Username));
             Assert.That(updatedUser.Email, Is.EqualTo(updateUserRequest.Email));
         }
         /// <summary>

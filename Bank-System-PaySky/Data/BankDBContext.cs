@@ -86,13 +86,22 @@ namespace Bank_System_PaySky.Data
                 
 
             modelBuilder.Entity<Users>()
-                .Property(u => u.Username)
+                .Property(u => u.UserName)
                 .HasMaxLength(100)
                 .IsRequired();
 
             modelBuilder.Entity<Users>()
                 .Property(u => u.Email)
                 .HasMaxLength(200)
+                .IsRequired();
+
+            modelBuilder.Entity<Users>()
+                .Property(u => u.Password)
+                .HasMaxLength(300)
+                .IsRequired();
+
+            modelBuilder.Entity<Users>()
+                .Property(u => u.IsAdmin)
                 .IsRequired();
 
             // Configure Currency entity
@@ -136,7 +145,22 @@ namespace Bank_System_PaySky.Data
                 new Currency { CurrencyCode = "SAR", ExchangeRate = 3.76m, IsBase = false }  // Saudi Riyal
             );
 
+            //SeedAdmin(modelBuilder);
         }
+
+        //public static void SeedAdmin(ModelBuilder modelBuilder)
+        //{
+        //    var admin = new Users
+        //    {
+        //        UserId = Guid.NewGuid(),
+        //        UserName = "Admin",
+        //        Email = "admin@gmail.com",
+        //        Password = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
+        //        IsAdmin = true,
+        //    };
+        //    modelBuilder.Entity<Users>().HasData(admin);
+
+        //}
 
     }
 }

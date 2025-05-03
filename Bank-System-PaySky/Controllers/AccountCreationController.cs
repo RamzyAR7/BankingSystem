@@ -6,6 +6,7 @@ using Bank_System_PaySky.Models.Accounts;
 using Bank_System_PaySky.Dtos.Accounts;
 using System.Security.Principal;
 using Bank_System_PaySky.Services.AccountCreation;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Bank_System_PaySky.Controllers
 {
@@ -15,6 +16,7 @@ namespace Bank_System_PaySky.Controllers
     [ApiController]
     [Route("api/accounts")]
     [ApiExplorerSettings(GroupName = "Accounts")]
+    [Authorize (Roles = "Admin")]
     public class AccountCreationController : ControllerBase
     {
         private readonly IAccountCreationService _accountCreationService;
